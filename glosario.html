@@ -58,6 +58,7 @@ pre code { background: none; padding: 0; }
 
 /* Encabezado */
 header.tapa { padding-block: 2.5rem 1.5rem; display: grid; gap: 1rem; }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
 .cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
 h1 { font: 800 var(--t-xl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
 .bajada { max-width: 62ch; margin: 0; color: var(--tenue); }
@@ -166,7 +167,8 @@ footer p { margin: 0 0 .6rem; }
 
 <div class="marco">
   <header class="tapa">
-    <p class="cejilla"><a href="index.html">Curso de Redes</a> · Glosario</p>
+    <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Curso de Redes</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a></nav>
+    <p class="cejilla">Curso de Redes · Glosario</p>
     <h1>Glosario de Redes</h1>
     <p class="bajada">Términos de los módulos 1 a 5, con su definición, una ampliación con ejemplos y las fuentes de la bibliografía de base y de las normas correspondientes. Cada término indica en qué capas del modelo OSI trabaja.</p>
     <div class="pares" aria-label="Orden de colores T568B">
