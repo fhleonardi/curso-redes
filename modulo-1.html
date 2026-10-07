@@ -1,0 +1,548 @@
+<title>Módulo 1: Fundamentos de redes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Portada del curso</a><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a><a href="modulo-2.html">Módulo 2 →</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Módulo 1 · Semanas 1 y 2 · 10 horas</p>
+      <h1>Fundamentos de redes y capa física</h1>
+      <p class="bajada">Qué es una red y cómo se clasifica, por dónde viajan los bits y qué hace cada dispositivo. Es la base física y de enlace sobre la que se apoya todo lo que viene después.</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="on" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="on" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="on" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  <div><p class="objetivos-tit">Al terminar el módulo vas a poder</p><ul class="objetivos"><li>Identificar los componentes de una red y clasificarla por alcance y por topología, distinguiendo topología física y lógica.</li><li>Elegir un medio de transmisión (par trenzado, fibra o radio) para una situación concreta y justificar la elección con sus limitaciones.</li><li>Explicar qué hace un hub, un switch, un router y un punto de acceso, y en qué capa trabaja cada uno.</li><li>Contar los dominios de colisión y de broadcast de una red y comprobarlo en OpenRedLab.</li><li>Inspeccionar la placa de red de un equipo Linux: interfaz, dirección MAC, velocidad y dúplex.</li></ul></div>
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones del módulo"><h2>En este módulo</h2><ol><li><a href="#red">1. Qué es una red</a></li><li><a href="#topologias">2. Topologías</a></li><li><a href="#medios">3. Medios de transmisión</a></li><li><a href="#dispositivos">4. Dispositivos de red</a></li><li><a href="#dominios">5. Dominios de colisión y de broadcast</a></li><li class="lab"><a href="#lab-7a">Laboratorio 1A · Topologías y dominios en OpenRedLab</a></li><li class="lab"><a href="#lab-7b">Laboratorio 1B · La placa de red en Linux</a></li><li><a href="#desafio">6. Desafío: el cableado de un laboratorio</a></li><li><a href="#logros">7. Micro-logros del módulo</a></li><li><a href="#autoevaluacion">8. Autoevaluación</a></li><li><a href="#profundizar">Para profundizar</a></li></ol></nav>
+  <main class="texto">
+<h2 id="red">1. Qué es una red</h2>
+
+<p>Una <a class="g" href="glosario.html#red" target="_blank" rel="noopener" title="Glosario: Red de computadoras">red de computadoras</a> es un conjunto de dispositivos autónomos que se comunican siguiendo reglas comunes. Que sean <i>autónomos</i> significa que cada uno funciona por sí mismo. Lo que los convierte en una red es que acuerdan cómo hablar entre sí: esas reglas son los <a class="g" href="glosario.html#protocolo" target="_blank" rel="noopener" title="Glosario: Protocolo">protocolos</a>, el tema central del módulo 2.</p>
+
+<p>Toda red, de la más chica a Internet, tiene tres tipos de componentes:</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Componente</th><th>Qué hace</th><th>Ejemplos</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#host" target="_blank" rel="noopener" title="Glosario: Host (sistema terminal)">Sistemas terminales (hosts)</a></td><td>Ejecutan las aplicaciones; originan y consumen la información</td><td>PC, servidor, teléfono, impresora en red, cámara IP</td></tr>
+<tr><td>Dispositivos intermedios</td><td>Reenvían el tráfico de otros</td><td><a class="g" href="glosario.html#switch" target="_blank" rel="noopener" title="Glosario: Switch (conmutador)">switch</a>, <a class="g" href="glosario.html#router" target="_blank" rel="noopener" title="Glosario: Router (enrutador)">router</a>, <a class="g" href="glosario.html#punto-acceso" target="_blank" rel="noopener" title="Glosario: Punto de acceso (AP)">punto de acceso</a>, firewall</td></tr>
+<tr><td><a class="g" href="glosario.html#enlace" target="_blank" rel="noopener" title="Glosario: Enlace">Enlaces</a> y <a class="g" href="glosario.html#medio-transmision" target="_blank" rel="noopener" title="Glosario: Medio de transmisión">medios</a></td><td>Llevan las señales de un nodo al siguiente</td><td>cable UTP, fibra óptica, radio Wi-Fi</td></tr>
+</tbody>
+</table></div>
+
+<p>Todos ellos son <a class="g" href="glosario.html#nodo" target="_blank" rel="noopener" title="Glosario: Nodo">nodos</a>. Cuando importa el rol, decimos <i>host</i> o <i>dispositivo intermedio</i>: un router es un nodo, pero no es un host.</p>
+
+<h3>Clasificación por alcance</h3>
+
+<div class="tabla"><table>
+<thead><tr><th>Tipo</th><th>Alcance típico</th><th>Quién la administra</th><th>Ejemplo</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#pan" target="_blank" rel="noopener" title="Glosario: PAN (red de área personal)">PAN</a></td><td>centímetros a pocos metros</td><td>el usuario</td><td>auriculares Bluetooth y teléfono</td></tr>
+<tr><td><a class="g" href="glosario.html#lan" target="_blank" rel="noopener" title="Glosario: LAN (red de área local)">LAN</a></td><td>casa, oficina, edificio, campus</td><td>la propia organización</td><td>la red de un laboratorio de computación</td></tr>
+<tr><td><a class="g" href="glosario.html#man" target="_blank" rel="noopener" title="Glosario: MAN (red de área metropolitana)">MAN</a></td><td>una ciudad</td><td>un proveedor, municipio o universidad</td><td>la fibra que une las sedes de una institución en la ciudad</td></tr>
+<tr><td><a class="g" href="glosario.html#wan" target="_blank" rel="noopener" title="Glosario: WAN (red de área amplia)">WAN</a></td><td>provincias, países</td><td>proveedores de telecomunicaciones (se contrata)</td><td>la red que une la casa central de una empresa con sus sucursales</td></tr>
+</tbody>
+</table></div>
+
+<p>Más que la distancia, lo que distingue a una LAN de una WAN es <b>quién es dueño de la infraestructura</b>. La LAN es propia; la WAN casi siempre es de un tercero, que la alquila. Eso cambia los costos, las velocidades y quién resuelve una falla.</p>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p><a class="g" href="glosario.html#internet" target="_blank" rel="noopener" title="Glosario: Internet">Internet</a> no es «la WAN más grande»: es una <b>red de redes</b>, miles de redes independientes (de proveedores, empresas, universidades y hogares) interconectadas con TCP/IP. Tampoco es lo mismo que la Web, que es una aplicación que funciona sobre Internet.</p></div>
+
+<h2 id="topologias">2. Topologías</h2>
+
+<p>La <a class="g" href="glosario.html#topologia" target="_blank" rel="noopener" title="Glosario: Topología de red">topología</a> describe cómo están dispuestos y conectados los nodos. Hay que separar dos miradas:</p>
+<ul>
+<li><b>Topología física:</b> cómo están tendidos los cables y dónde están los equipos.</li>
+<li><b>Topología lógica:</b> cómo circulan los datos y cómo se accede al medio.</li>
+</ul>
+
+<div class="tabla"><table>
+<thead><tr><th>Topología</th><th>Disposición</th><th>A favor</th><th>En contra</th></tr></thead>
+<tbody>
+<tr><td>Bus</td><td>Todos sobre un cable compartido</td><td>Poco cable</td><td>Un corte deja sin servicio a todo el segmento; colisiones</td></tr>
+<tr><td>Estrella</td><td>Todos a un nodo central (switch)</td><td>Fácil de administrar; un cable roto afecta a un solo equipo</td><td>El nodo central es punto único de falla</td></tr>
+<tr><td>Anillo</td><td>Cada nodo con dos vecinos, en círculo cerrado</td><td>Acceso ordenado (por turnos)</td><td>En un anillo simple, un corte afecta a todos</td></tr>
+<tr><td>Malla</td><td>Varios caminos entre nodos</td><td>Tolerancia a fallos</td><td>Costo: una malla completa de <i>n</i> nodos necesita <i>n(n−1)/2</i> enlaces</td></tr>
+<tr><td>Árbol</td><td>Estrellas encadenadas en niveles</td><td>Escala bien; es la del cableado de un edificio</td><td>La falla de un nivel aísla a los que cuelgan de él</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo</span><p>Varias PC conectadas a un <a class="g" href="glosario.html#hub" target="_blank" rel="noopener" title="Glosario: Hub (concentrador)">hub</a> forman físicamente una <b>estrella</b>: cada una tiene su cable al centro. Pero el hub repite cada señal por todos sus puertos, así que lógicamente se comportan como un <b>bus</b>: todos reciben todo y, si dos transmiten a la vez, chocan. Si se cambia el hub por un switch, la topología física es la misma y la lógica cambia.</p></div>
+
+<div class="caja-nota pensar"><span class="lbl">Para pensar</span><p>¿Cuántos enlaces necesita una malla completa de 6 routers? ¿Y de 20? ¿Por qué en la práctica las redes grandes usan una malla <i>parcial</i>?</p></div>
+
+
+
+<h2 id="medios">3. Medios de transmisión</h2>
+
+<p>El <a class="g" href="glosario.html#medio-transmision" target="_blank" rel="noopener" title="Glosario: Medio de transmisión">medio</a> es el soporte por el que viaja la señal. Los medios se dividen en <a class="g" href="glosario.html#medio-guiado" target="_blank" rel="noopener" title="Glosario: Medio guiado y no guiado">guiados</a> (la señal va confinada en cobre o vidrio) y <b>no guiados</b> (la señal se propaga por el aire como onda de radio). El medio fija el límite de lo que la red puede hacer: cuánta distancia, cuánta velocidad y cuánta inmunidad al ruido.</p>
+
+<h3>Par trenzado</h3>
+
+<p>Es el cable de red habitual: 4 pares de cobre trenzados, terminados en conectores <a class="g" href="glosario.html#rj45" target="_blank" rel="noopener" title="Glosario: RJ-45 (conector 8P8C)">RJ-45</a>. El trenzado hace que el ruido externo afecte por igual a los dos hilos de un par. Como la señal se transmite como <i>diferencia</i> entre ambos, el ruido se cancela. La versión sin blindaje es la <a class="g" href="glosario.html#par-trenzado" target="_blank" rel="noopener" title="Glosario: Par trenzado (UTP)">UTP</a>. Las versiones con <a class="g" href="glosario.html#cable-blindado" target="_blank" rel="noopener" title="Glosario: Cable blindado (F/UTP, U/FTP, S/FTP)">blindaje</a> (F/UTP, U/FTP, S/FTP) se usan donde hay mucha <a class="g" href="glosario.html#emi" target="_blank" rel="noopener" title="Glosario: Interferencia electromagnética (EMI)">interferencia electromagnética</a>.</p>
+
+<div class="tabla"><table>
+<thead><tr><th><a class="g" href="glosario.html#categorias-cable" target="_blank" rel="noopener" title="Glosario: Categorías de cable (Cat 5e, 6, 6A, 8)">Categoría</a></th><th>Frecuencia</th><th>Ethernet</th><th>Distancia</th></tr></thead>
+<tbody>
+<tr><td>Cat 5e</td><td>100 MHz</td><td>1 Gb/s</td><td>100 m</td></tr>
+<tr><td>Cat 6</td><td>250 MHz</td><td>1 Gb/s (10 Gb/s hasta 55 m)</td><td>100 m</td></tr>
+<tr><td>Cat 6A</td><td>500 MHz</td><td>10 Gb/s</td><td>100 m</td></tr>
+</tbody>
+</table></div>
+
+<p>Los <b>100 m</b> son el límite del <i>canal</i> que fija la norma <a class="g" href="glosario.html#norma-tia568" target="_blank" rel="noopener" title="Glosario: Norma TIA-568 (T568A y T568B)">TIA-568</a>: 90 m de cable fijo en la pared más 10 m de cables de conexión. Pasado ese largo, la <a class="g" href="glosario.html#atenuacion" target="_blank" rel="noopener" title="Glosario: Atenuación">atenuación</a> y la <a class="g" href="glosario.html#diafonia" target="_blank" rel="noopener" title="Glosario: Diafonía (crosstalk)">diafonía</a> superan lo que el receptor tolera.</p>
+
+<p>Los conectores se arman según T568A o T568B. Lo importante es usar la misma asignación en toda la instalación. El <a class="g" href="glosario.html#cable-directo-cruzado" target="_blank" rel="noopener" title="Glosario: Cable directo y cable cruzado">cable cruzado</a> casi no se usa hoy: los equipos detectan solos el tipo de cable (<a class="g" href="glosario.html#auto-mdi-x" target="_blank" rel="noopener" title="Glosario: Auto-MDI-X">Auto-MDI-X</a>).</p>
+
+<h3>Fibra óptica</h3>
+
+<p>La <a class="g" href="glosario.html#fibra-optica" target="_blank" rel="noopener" title="Glosario: Fibra óptica">fibra</a> transmite pulsos de luz por un núcleo de vidrio. La luz queda atrapada en el núcleo por reflexión total interna. No le afecta la interferencia electromagnética, aísla eléctricamente los extremos y atenúa muy poco.</p>
+
+<div class="tabla"><table>
+<thead><tr><th></th><th><a class="g" href="glosario.html#fibra-multimodo" target="_blank" rel="noopener" title="Glosario: Fibra óptica multimodo">Multimodo</a></th><th><a class="g" href="glosario.html#fibra-monomodo" target="_blank" rel="noopener" title="Glosario: Fibra óptica monomodo">Monomodo</a></th></tr></thead>
+<tbody>
+<tr><td>Núcleo</td><td>50 o 62,5 µm</td><td>8–10 µm</td></tr>
+<tr><td>Fuente de luz</td><td>VCSEL, 850 nm</td><td>láser, 1310 / 1550 nm</td></tr>
+<tr><td>Alcance típico</td><td>cientos de metros (10GBASE-SR en OM4: 400 m)</td><td>kilómetros a decenas de km</td></tr>
+<tr><td>Dónde</td><td>dentro de un edificio o centro de datos</td><td>entre edificios, proveedores, FTTH</td></tr>
+<tr><td>Color de cubierta</td><td>aqua (OM3/OM4)</td><td>amarillo</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p>En la fibra, el <b>medio</b> es el vidrio; la luz es la <b>señal</b>. Y «inmune a interferencias» no quiere decir «sin pérdidas»: hay atenuación, dispersión, curvas demasiado cerradas y conectores sucios.</p></div>
+
+<h3>Medio inalámbrico</h3>
+
+<p>Wi-Fi (<a class="g" href="glosario.html#inalambrico" target="_blank" rel="noopener" title="Glosario: Medio inalámbrico (Wi-Fi, IEEE 802.11)">IEEE 802.11</a>) usa radio en 2,4, 5 y 6 GHz. Todas las estaciones de un canal comparten el medio y transmiten de a una (semidúplex), coordinadas por CSMA/CA. El alcance y la velocidad reales dependen de la distancia, de las paredes y de cuántas redes vecinas usan el mismo canal. Cada red se identifica con un <a class="g" href="glosario.html#ssid" target="_blank" rel="noopener" title="Glosario: SSID (nombre de red Wi-Fi)">SSID</a> (su nombre) y se protege con <a class="g" href="glosario.html#seguridad-wifi" target="_blank" rel="noopener" title="Glosario: Seguridad Wi-Fi (WPA2, WPA3, 802.1X)">WPA2 o WPA3</a>, que se ven en el módulo 5.</p>
+
+<h3>Magnitudes que hay que manejar</h3>
+
+<ul>
+<li><a class="g" href="glosario.html#ancho-de-banda" target="_blank" rel="noopener" title="Glosario: Ancho de banda">Ancho de banda</a>: la capacidad nominal del enlace, en bits por segundo.</li>
+<li><a class="g" href="glosario.html#throughput" target="_blank" rel="noopener" title="Glosario: Throughput (caudal efectivo)">Throughput</a>: lo que efectivamente se transfiere. Siempre es menor, y lo limita el enlace más lento del camino.</li>
+<li><a class="g" href="glosario.html#latencia" target="_blank" rel="noopener" title="Glosario: Latencia (retardo)">Latencia</a>: cuánto tarda un bit en llegar. Más ancho de banda no la achica.</li>
+<li><a class="g" href="glosario.html#modo-duplex" target="_blank" rel="noopener" title="Glosario: Modo de transmisión (símplex, semidúplex, dúplex)">Modo de transmisión</a>: símplex, semidúplex o dúplex completo.</li>
+</ul>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto: bits y bytes</span>
+<p>¿Cuánto tarda en descargarse un archivo de 1 GB por un enlace de 100 Mb/s, en el mejor caso?</p>
+<pre>1 GB = 8 × 10⁹ bits        (1 byte = 8 bits; tomamos 1 GB = 10⁹ bytes)
+t = 8 × 10⁹ b / 10⁸ b/s = 80 s</pre>
+<p>Con un throughput real del 90 % serían unos 89 s. Los proveedores anuncian en <b>megabits</b> por segundo (Mb/s) y los navegadores muestran <b>megabytes</b> por segundo (MB/s): 100 Mb/s son 12,5 MB/s.</p></div>
+
+<h2 id="dispositivos">4. Dispositivos de red</h2>
+
+<div class="tabla"><table>
+<thead><tr><th>Dispositivo</th><th>Capa</th><th>Decide con</th><th>Qué hace con una trama o paquete</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#nic" target="_blank" rel="noopener" title="Glosario: Tarjeta de interfaz de red (NIC)">NIC</a></td><td>1–2</td><td>su <a class="g" href="glosario.html#direccion-mac" target="_blank" rel="noopener" title="Glosario: Dirección MAC">MAC</a></td><td>Convierte bits en señal y señal en bits; acepta las tramas para su MAC, broadcast o multicast suscripto</td></tr>
+<tr><td><a class="g" href="glosario.html#hub" target="_blank" rel="noopener" title="Glosario: Hub (concentrador)">Hub</a></td><td>1</td><td>nada</td><td>Repite la señal por todos los puertos</td></tr>
+<tr><td><a class="g" href="glosario.html#switch" target="_blank" rel="noopener" title="Glosario: Switch (conmutador)">Switch</a></td><td>2</td><td>MAC destino y su <a class="g" href="glosario.html#tabla-mac" target="_blank" rel="noopener" title="Glosario: Tabla MAC (tabla CAM)">tabla MAC</a></td><td>Reenvía solo por el puerto del destino; si no lo conoce, inunda</td></tr>
+<tr><td><a class="g" href="glosario.html#punto-acceso" target="_blank" rel="noopener" title="Glosario: Punto de acceso (AP)">Punto de acceso</a></td><td>1–2</td><td>MAC</td><td>Puente entre la radio y el cable</td></tr>
+<tr><td><a class="g" href="glosario.html#router" target="_blank" rel="noopener" title="Glosario: Router (enrutador)">Router</a></td><td>3</td><td>IP destino y su <a class="g" href="glosario.html#tabla-rutas" target="_blank" rel="noopener" title="Glosario: Tabla de rutas (tabla de enrutamiento)">tabla de rutas</a></td><td>Saca el paquete de la trama, baja el TTL y lo pone en una trama nueva hacia el siguiente salto</td></tr>
+</tbody>
+</table></div>
+
+<h3>Cómo aprende un switch</h3>
+
+<p>Un switch arranca con la tabla MAC vacía y la llena mirando la <b>MAC de origen</b> de cada trama que recibe:</p>
+
+<pre>PC-A (aa:..:01, puerto 1) envía a PC-B (bb:..:02)
+  1. El switch anota: aa:..:01 → puerto 1
+  2. No conoce bb:..:02 → inunda: copia la trama por los puertos 2, 3, 4…
+PC-B responde a PC-A
+  3. El switch anota: bb:..:02 → puerto 2
+  4. Conoce aa:..:01 → la envía solo por el puerto 1
+De acá en adelante, A y B se hablan sin molestar a nadie más.</pre>
+
+<p>Las entradas vencen si no se usan (300 s por defecto). Las tramas de <a class="g" href="glosario.html#broadcast" target="_blank" rel="noopener" title="Glosario: Broadcast (difusión)">broadcast</a> (<code>ff:ff:ff:ff:ff:ff</code>) siempre se inundan.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Bucles</span><p>Si dos switches quedan unidos por dos cables (por redundancia o por error), se forma un bucle. Un broadcast daría vueltas para siempre, porque Ethernet no tiene TTL, y en segundos saturaría la red: es una <b>tormenta de broadcast</b>. El <a class="g" href="glosario.html#stp" target="_blank" rel="noopener" title="Glosario: Spanning Tree Protocol (STP)">Spanning Tree Protocol</a> lo evita: bloquea los enlaces que cierran un ciclo y los reactiva si falla el activo.</p></div>
+
+<p>Muchos switches, además, alimentan por el mismo cable a los puntos de acceso, las cámaras y los teléfonos IP: es <a class="g" href="glosario.html#poe" target="_blank" rel="noopener" title="Glosario: PoE (alimentación por Ethernet)">PoE</a>.</p>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p>El equipo que se llama «router» en una casa es en realidad un equipo multifunción: router, NAT, switch de 4 puertos, punto de acceso Wi-Fi, servidor DHCP y reenviador DNS en una sola caja. Cuando estudiemos cada función, conviene pensarlas por separado.</p></div>
+
+<h2 id="dominios">5. Dominios de colisión y de broadcast</h2>
+
+<p>Un <a class="g" href="glosario.html#dominio-colision" target="_blank" rel="noopener" title="Glosario: Dominio de colisión">dominio de colisión</a> es el conjunto de interfaces que comparten un medio en semidúplex: si dos transmiten a la vez, chocan. Un <a class="g" href="glosario.html#dominio-broadcast" target="_blank" rel="noopener" title="Glosario: Dominio de broadcast">dominio de broadcast</a> es el conjunto de equipos al que le llega un broadcast enviado por cualquiera de ellos.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Dispositivo</th><th>¿Divide dominios de colisión?</th><th>¿Divide dominios de broadcast?</th></tr></thead>
+<tbody>
+<tr><td>Hub</td><td>No</td><td>No</td></tr>
+<tr><td>Switch</td><td>Sí: uno por puerto</td><td>No (salvo con <a class="g" href="glosario.html#vlan" target="_blank" rel="noopener" title="Glosario: VLAN (LAN virtual)">VLAN</a>)</td></tr>
+<tr><td>Router</td><td>Sí</td><td>Sí: uno por interfaz</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Método para contar</span>
+<ol>
+<li><b>Broadcast:</b> contá las interfaces de router en uso. Cada una es un dominio de broadcast, con todo lo que cuelga de ella a través de switches, hubs y AP.</li>
+<li><b>Colisión:</b> cada puerto de switch o de router en uso es un dominio. Todo lo conectado a un mismo hub (más el puerto del switch donde está ese hub) cuenta como uno solo.</li>
+</ol>
+<p>Ejemplo: un router con dos interfaces. En una hay un switch con 4 PC; en la otra, un hub con 3 PC.</p>
+<pre>Broadcast: 2 (una por interfaz del router)
+Colisión:  enlace router–switch (1) + 4 puertos de PC en el switch (4)
+           + todo el hub con sus 3 PC y el puerto del router (1) = 6</pre></div>
+
+<p>En una red conmutada en dúplex completo, en la práctica no hay colisiones. El concepto sigue sirviendo para entender por qué se abandonó el hub y por qué un dominio de broadcast demasiado grande es un problema: cada <a class="g" href="glosario.html#arp" target="_blank" rel="noopener" title="Glosario: ARP (protocolo de resolución de direcciones)">ARP</a> y cada <a class="g" href="glosario.html#dhcp" target="_blank" rel="noopener" title="Glosario: DHCP">DHCP</a> le llegan a todos.</p>
+
+<section class="lab" id="lab-7a">
+<header><h3>Laboratorio 1A · Topologías y dominios en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>90 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Abrí <a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a> en el navegador. No hace falta instalar nada.</p>
+<ol class="pasos">
+<li>En <b>Ejemplos…</b>, abrí <i>Topología en estrella</i>. Hacé un ping entre dos PC y seguí el recorrido. Después seleccioná un cable, poné su <b>Estado</b> en <i>caído</i> y repetí el ping. Anotá el diagnóstico que aparece (<b>D02</b>) y a cuántos equipos afecta el corte.</li>
+<li>Abrí <i>Bus (medio compartido con un hub)</i>. En el recorrido del ping, buscá el paso que dice que el hub repite la trama por todos sus puertos.</li>
+<li><b>Antes de mirar</b>, contá a mano los dominios de colisión y de broadcast del bus. Después elegí <i>Dominios de colisión</i> y luego <i>Dominios de broadcast</i> en el selector del lienzo, y comprobá tu cuenta.</li>
+<li>Abrí <i>Topología en estrella</i> de nuevo, seleccioná el switch y en <b>Configuración → Modelo</b> cambialo por <i>Hub de 8 puertos</i>. Predecí cómo cambia la cuenta de dominios y comprobalo.</li>
+<li>Abrí <i>Malla entre tres routers</i> y <i>Dos LAN unidas por una WAN</i>. Para cada una, escribí en una línea qué ganás y qué pagás frente a la estrella.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> una tabla con tus predicciones de dominios y lo que mostró el simulador, en los dos casos (bus y estrella con hub), y la captura del recorrido con el D02.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-7b">
+<header><h3>Laboratorio 1B · La placa de red en Linux</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM)</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>En tu máquina virtual con Ubuntu Server. Los comandos con <code>sudo</code> piden la contraseña de tu usuario.</p>
+<ol class="pasos">
+<li>Listá las interfaces y su estado:
+<pre>ip link
+ip -br link          <span class="c"># versión resumida: nombre, estado, MAC</span></pre>
+Identificá la interfaz de loopback (<code>lo</code>) y tu placa (por ejemplo, <code>enp0s3</code>). ¿Qué MAC tiene la placa?</li>
+<li>Separá el OUI (los primeros 3 octetos) y buscá a qué fabricante corresponde en el registro público de la IEEE. ¿Por qué aparece ese fabricante en una máquina virtual?</li>
+<li>Mirá la velocidad y el dúplex negociados:
+<pre>sudo apt install -y ethtool
+sudo ethtool enp0s3 | grep -E 'Speed|Duplex|Link detected'</pre></li>
+<li>Mirá los contadores de la interfaz (bytes, paquetes, errores, descartes):
+<pre>ip -s link show enp0s3</pre></li>
+<li>Apagá la VM, cambiá la MAC en <b>Configuración → Red → Avanzadas</b> de VirtualBox, volvé a arrancar y repetí el paso 1. ¿Qué te dice esto de la idea de que la MAC es «única y grabada de fábrica»?</li>
+<li>En tu teléfono, buscá en los detalles de la red Wi-Fi si usa «MAC aleatoria» o «dirección privada». Anotá si está activada y por qué existe esa opción.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la salida de <code>ip -br link</code> antes y después del cambio de MAC, la línea de velocidad y dúplex, y tres renglones con lo que concluiste en los pasos 2, 5 y 6.</div>
+</div>
+</section>
+
+
+
+<h2 id="desafio">6. Desafío: el cableado de un laboratorio</h2>
+
+<p>Una escuela técnica va a armar un laboratorio nuevo de 24 puestos en el primer piso. El rack con los switches está en la planta baja, a unos 35 m de cable del aula. Además, hay que unir este edificio con el anexo, que está a 350 m por un tendido exterior, donde hoy llega un cable UTP que «anda mal cuando llueve».</p>
+<p>Sin más datos que estos, proponé:</p>
+<ol>
+<li>La topología física y lógica del laboratorio, con un esquema.</li>
+<li>La categoría de cable para los puestos y una justificación con números: velocidad y distancia.</li>
+<li>El medio para el enlace con el anexo (tipo de fibra, o por qué no), y por qué falla el UTP actual. Hay al menos dos razones.</li>
+<li>Cuántos dominios de colisión y de broadcast tendría tu diseño, y si conviene dividir el de broadcast.</li>
+</ol>
+
+
+
+<h2 id="logros">7. Micro-logros del módulo</h2>
+<p>Tildalos a medida que los cumplís. Tu navegador los recuerda.</p>
+<ul class="logros" data-id="u7">
+<li>Puedo explicar con un ejemplo la diferencia entre topología física y lógica.</li>
+<li>Elijo la categoría de cable o el tipo de fibra para una distancia y una velocidad dadas, y lo justifico.</li>
+<li>Calculo el tiempo de transferencia de un archivo sin confundir bits con bytes.</li>
+<li>Explico qué hace un switch al recibir una trama para una MAC que todavía no conoce.</li>
+<li>Cuento a mano los dominios de colisión y de broadcast de una red y lo compruebo en OpenRedLab.</li>
+<li>Encuentro en Linux la MAC, la velocidad y el dúplex de mi placa de red.</li>
+</ul>
+
+<h2 id="autoevaluacion">8. Autoevaluación</h2>
+<p class="puntaje"></p>
+
+<div class="preg" data-ok="3"><p>Un hub y un switch tienen 8 PC conectadas cada uno. ¿Qué cambia entre ambos?</p>
+<ol><li>Con el switch hay 8 dominios de broadcast</li><li>Con el hub hay 8 dominios de colisión</li><li>Con el switch hay un dominio de colisión por puerto; con el hub, uno solo</li><li>Nada, porque ambos son de capa 2</li></ol>
+<p class="porque">El hub es de capa 1 y repite todo: un solo dominio de colisión. El switch aísla cada puerto. Ninguno de los dos divide el dominio de broadcast.</p></div>
+
+<div class="preg" data-ok="2"><p>Un enlace de 300 Mb/s descarga un archivo de 750 MB. Sin pérdidas ni cabeceras, ¿cuánto tarda?</p>
+<ol><li>2,5 s</li><li>20 s</li><li>0,4 s</li><li>250 s</li></ol>
+<p class="porque">750 MB × 8 = 6000 Mb; 6000 Mb / 300 Mb/s = 20 s. La respuesta de 2,5 s olvida pasar de bytes a bits.</p></div>
+
+<div class="preg" data-ok="4"><p>¿Qué medio conviene para unir dos edificios separados por 2 km?</p>
+<ol><li>UTP Cat 6A con un switch a mitad de camino</li><li>Fibra multimodo OM1</li><li>Coaxial de 75 Ω</li><li>Fibra monomodo</li></ol>
+<p class="porque">A 2 km la dispersión modal limita a la multimodo. La monomodo con láser de 1310 nm llega a 10 km con 10GBASE-LR.</p></div>
+
+<div class="preg" data-ok="1"><p>Una PC envía una trama a una MAC que el switch nunca vio. ¿Qué hace el switch?</p>
+<ol><li>La inunda por todos los puertos menos el de entrada</li><li>La descarta</li><li>Le pregunta al router</li><li>Envía una consulta ARP</li></ol>
+<p class="porque">Es el «inundar» del switch. ARP es de los hosts y routers, y resuelve IP → MAC; el switch ni siquiera mira las direcciones IP.</p></div>
+
+<div class="preg" data-ok="3"><p>Unas PC conectadas a un hub forman…</p>
+<ol><li>una topología física en bus y lógica en estrella</li><li>una topología física y lógica en estrella</li><li>una topología física en estrella y lógica en bus</li><li>un anillo</li></ol>
+<p class="porque">El cableado es en estrella, pero como el hub repite todo a todos, el medio se comporta como un bus compartido.</p></div>
+
+<div class="preg" data-ok="2"><p>¿Cuál de estas afirmaciones sobre la dirección MAC es correcta?</p>
+<ol><li>Identifica al equipo en Internet</li><li>Tiene 48 bits, y los primeros 24 identifican al fabricante</li><li>No se puede cambiar</li><li>La asigna el servidor DHCP</li></ol>
+<p class="porque">Tiene alcance local (no cruza routers), se puede cambiar por software y los teléfonos usan MAC aleatorias. La IP es la que puede asignar DHCP.</p></div>
+
+<div class="preg" data-ok="4"><p>Un router tiene 3 interfaces en uso. En cada una hay un switch con 5 PC. ¿Cuántos dominios de broadcast hay?</p>
+<ol><li>1</li><li>15</li><li>18</li><li>3</li></ol>
+<p class="porque">Uno por interfaz de router. Los switches no los dividen.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Por qué el par trenzado se trenza?</p>
+<ol><li>Para que el ruido afecte por igual a los dos hilos del par y se cancele en el receptor</li><li>Para que el cable sea más flexible</li><li>Para duplicar la velocidad</li><li>Para identificar los pares por color</li></ol>
+<p class="porque">La señal es diferencial: el receptor mide la diferencia entre los dos hilos. Un ruido que afecta a ambos por igual desaparece en la resta. Además, cada par usa un paso de trenzado distinto para reducir la diafonía.</p></div>
+
+<div class="caja-nota ia"><span class="lbl">Con IA, pero verificando</span><p>Pedile a un asistente: «Explicame la diferencia entre dominio de colisión y de broadcast con una red de un router, dos switches y un hub, y contá los dominios». Armá esa red en OpenRedLab y comprobá la cuenta con el selector de dominios del lienzo. Anotá en tu registro de uso de IA si la respuesta fue correcta y, si no, en qué se equivocó.</p></div>
+
+<h2 id="profundizar">Para profundizar</h2>
+<ul>
+<li>Tanenbaum, Feamster y Wetherall (2023), caps. 1, 2 y 4: tipos de redes, medios de transmisión, Ethernet y redes inalámbricas.</li>
+<li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Peterson y Davie</a>, cap. 2 (<i>Direct Links</i>): codificación, tramas, detección de errores, Ethernet y Wi-Fi.</li>
+<li><a href="https://www.netacad.com/courses/ccna-introduction-networks?courseLang=es-XL" target="_blank" rel="noopener">CCNA: Introducción a las redes</a> (Cisco NetAcad, en español): los módulos de capa física y de Ethernet tienen simulaciones y cuestionarios.</li>
+</ul>
+<p>Peterson y Davie, Grigorik y los Wireshark Labs están en inglés y son de acceso libre.</p>
+
+
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Módulo 1 de 5</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-u7';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>

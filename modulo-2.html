@@ -1,0 +1,586 @@
+<title>Módulo 2: Modelos OSI y TCP/IP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Portada del curso</a><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a><a href="modulo-1.html">← Módulo 1</a><a href="modulo-3.html">Módulo 3 →</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Módulo 2 · Semanas 3 y 4 · 10 horas</p>
+      <h1>Modelos de referencia OSI y TCP/IP</h1>
+      <p class="bajada">Por qué las redes se organizan en capas, qué hace cada una, cómo se envuelven los datos al bajar por la pila y dónde vive cada protocolo dentro del sistema operativo.</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="on" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="on" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="on" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="on" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="on" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="on" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="on" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  <div><p class="objetivos-tit">Al terminar el módulo vas a poder</p><ul class="objetivos"><li>Describir la función de cada capa del modelo OSI y ubicar en ellas protocolos y dispositivos conocidos.</li><li>Relacionar el modelo OSI con el modelo TCP/IP y con el modelo de cinco capas que usa la bibliografía.</li><li>Explicar el encapsulamiento y nombrar correctamente la unidad de datos de cada capa.</li><li>Seguir un paquete salto por salto e indicar qué cambia (MAC, TTL) y qué se mantiene (IP).</li><li>Reconocer las capas en una captura de Wireshark y en los componentes de un sistema Linux.</li><li>Aplicar un método sistemático de diagnóstico, guiado por el modelo de capas.</li></ul></div>
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones del módulo"><h2>En este módulo</h2><ol><li><a href="#capas">1. Por qué capas</a></li><li><a href="#osi">2. El modelo OSI</a></li><li><a href="#tcpip">3. El modelo TCP/IP</a></li><li><a href="#encapsulamiento">4. Encapsulamiento</a></li><li><a href="#viaje">5. El viaje de un paquete</a></li><li><a href="#so">6. Los protocolos dentro del sistema operativo</a></li><li><a href="#diagnostico">7. Cómo diagnosticar una falla</a></li><li class="lab"><a href="#lab-8a">Laboratorio 2A · Cómo viaja el paquete en OpenRedLab</a></li><li class="lab"><a href="#lab-8b">Laboratorio 2B · Las capas en una captura real</a></li><li><a href="#desafio">8. Desafío: decodificar una trama a mano</a></li><li><a href="#logros">9. Micro-logros del módulo</a></li><li><a href="#autoevaluacion">10. Autoevaluación</a></li><li><a href="#profundizar">Para profundizar</a></li></ol></nav>
+  <main class="texto">
+<h2 id="capas">1. Por qué capas</h2>
+
+<p>Comunicar dos programas en continentes distintos implica resolver muchos problemas a la vez: convertir bits en señales, decidir quién transmite, encontrar el camino, recuperar lo que se pierde, representar los datos. Las arquitecturas de red los separan en <a class="g" href="glosario.html#capa" target="_blank" rel="noopener" title="Glosario: Capa (arquitectura en capas)">capas</a>. Cada capa resuelve una parte, ofrece un <b>servicio</b> a la de arriba y usa el servicio de la de abajo.</p>
+
+<p>Cada capa conversa con su <b>par</b> del otro extremo mediante un <a class="g" href="glosario.html#protocolo" target="_blank" rel="noopener" title="Glosario: Protocolo">protocolo</a>: reglas sobre el formato y el orden de los mensajes y sobre qué hacer al recibirlos. Stallings lo resume en tres elementos: <b>sintaxis</b> (formato), <b>semántica</b> (significado) y <b>temporización</b> (cuándo y a qué velocidad).</p>
+
+<div class="caja-nota ejemplo"><span class="lbl">Analogía</span><p>Una carta: quien escribe no sabe cómo funciona el camión del correo, y el camionero no lee la carta. El sobre (con la dirección) es la «cabecera» que agrega una capa para que la de abajo pueda hacer su trabajo. Si el correo cambia de camiones a aviones, quien escribe no se entera. Esa independencia es lo que se gana con las capas.</p></div>
+
+<h2 id="osi">2. El modelo OSI</h2>
+
+<p>El <a class="g" href="glosario.html#modelo-osi" target="_blank" rel="noopener" title="Glosario: Modelo OSI">modelo OSI</a> (ISO 7498, 1984) es un <b>modelo de referencia</b> de siete capas. Sus protocolos propios no se impusieron, pero su vocabulario sí: cuando alguien dice «es un problema de capa 2» o «un switch de capa 3», está usando OSI.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>#</th><th>Capa</th><th>Pregunta que responde</th><th>Ejemplos</th><th>Dispositivo típico</th></tr></thead>
+<tbody>
+<tr><td>7</td><td>Aplicación</td><td>¿Qué servicio usa el programa?</td><td>HTTP, DNS, SSH</td><td>—</td></tr>
+<tr><td>6</td><td>Presentación</td><td>¿Cómo se representan los datos?</td><td>codificación (UTF-8), compresión, cifrado</td><td>—</td></tr>
+<tr><td>5</td><td>Sesión</td><td>¿Cómo se organiza el diálogo?</td><td>(en TCP/IP lo resuelven las aplicaciones)</td><td>—</td></tr>
+<tr><td>4</td><td>Transporte</td><td>¿Qué proceso recibe los datos, y llegan completos?</td><td>TCP, UDP</td><td>firewall con estado</td></tr>
+<tr><td>3</td><td>Red</td><td>¿Por qué camino llega a otra red?</td><td>IP, ICMP</td><td>router</td></tr>
+<tr><td>2</td><td>Enlace</td><td>¿Cómo llega al vecino del mismo enlace?</td><td>Ethernet, Wi-Fi</td><td>switch, AP</td></tr>
+<tr><td>1</td><td>Física</td><td>¿Cómo se transmiten los bits como señal?</td><td>cables, conectores, radio</td><td>hub, repetidor</td></tr>
+</tbody>
+</table></div>
+
+<p>Una frase para recordar el orden de abajo hacia arriba: <b>F</b>ui <b>E</b>n <b>R</b>umbo <b>T</b>ranquilo, <b>S</b>in <b>P</b>risa <b>A</b>lguna.</p>
+
+<h2 id="tcpip">3. El modelo TCP/IP</h2>
+
+<p>El <a class="g" href="glosario.html#modelo-tcpip" target="_blank" rel="noopener" title="Glosario: Modelo TCP/IP">modelo TCP/IP</a> es la arquitectura que realmente usa Internet. El RFC 1122 lo define con cuatro capas. A diferencia de OSI, se escribió <i>después</i> de que los protocolos ya funcionaran.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>OSI</th><th>TCP/IP (RFC 1122)</th><th>Cinco capas (Kurose y Ross, Tanenbaum)</th></tr></thead>
+<tbody>
+<tr><td>7 Aplicación · 6 Presentación · 5 Sesión</td><td>Aplicación</td><td>Aplicación</td></tr>
+<tr><td>4 Transporte</td><td>Transporte</td><td>Transporte</td></tr>
+<tr><td>3 Red</td><td>Internet</td><td>Red</td></tr>
+<tr><td>2 Enlace</td><td rowspan="2">Enlace (acceso a red)</td><td>Enlace</td></tr>
+<tr><td>1 Física</td><td>Física</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p>Que una fuente use cuatro capas y otra cinco no es una contradicción: el modelo de cinco capas separa la física del enlace. Fijate cuál usa cada fuente. Y OSI no «compite» con TCP/IP: uno es un marco de referencia y el otro es la familia de protocolos que se usa.</p></div>
+
+<h2 id="encapsulamiento">4. Encapsulamiento</h2>
+
+<p>Al bajar por la pila, cada capa toma lo que recibe de arriba como <b>carga útil</b> y le agrega su <b>cabecera</b>. La capa de enlace, además, agrega una <b>cola</b> con un código para detectar errores. Ese proceso es el <a class="g" href="glosario.html#encapsulamiento" target="_blank" rel="noopener" title="Glosario: Encapsulamiento">encapsulamiento</a>. En el receptor ocurre lo inverso: cada capa lee su cabecera, la quita y entrega el resto a la capa de arriba.</p>
+
+<figure>
+<svg viewBox="0 0 680 230" role="img" aria-label="Encapsulamiento: los datos de aplicación reciben la cabecera TCP, luego la IP y luego la Ethernet con su cola FCS">
+  <text x="0" y="30" font-size="13">Aplicación</text>
+  <rect class="bien" x="330" y="14" width="250" height="26" rx="3"/>
+  <text x="455" y="32" font-size="12" text-anchor="middle">datos (p. ej. HTTP)</text>
+  <text x="600" y="32" font-size="12" class="tenue">mensaje</text>
+
+  <text x="0" y="80" font-size="13">Transporte</text>
+  <rect class="aviso" x="270" y="64" width="60" height="26" rx="3"/><text x="300" y="82" font-size="12" text-anchor="middle">TCP</text>
+  <rect class="bien" x="330" y="64" width="250" height="26" rx="3"/><text x="455" y="82" font-size="12" text-anchor="middle">datos</text>
+  <text x="600" y="82" font-size="12" class="tenue">segmento</text>
+
+  <text x="0" y="130" font-size="13">Red</text>
+  <rect class="acento" x="210" y="114" width="60" height="26" rx="3"/><text x="240" y="132" font-size="12" text-anchor="middle">IP</text>
+  <rect class="aviso" x="270" y="114" width="60" height="26" rx="3"/><text x="300" y="132" font-size="12" text-anchor="middle">TCP</text>
+  <rect class="bien" x="330" y="114" width="250" height="26" rx="3"/><text x="455" y="132" font-size="12" text-anchor="middle">datos</text>
+  <text x="600" y="132" font-size="12" class="tenue">paquete</text>
+
+  <text x="0" y="180" font-size="13">Enlace</text>
+  <rect class="caja" x="130" y="164" width="80" height="26" rx="3"/><text x="170" y="182" font-size="12" text-anchor="middle">Ethernet</text>
+  <rect class="acento" x="210" y="164" width="60" height="26" rx="3"/><text x="240" y="182" font-size="12" text-anchor="middle">IP</text>
+  <rect class="aviso" x="270" y="164" width="60" height="26" rx="3"/><text x="300" y="182" font-size="12" text-anchor="middle">TCP</text>
+  <rect class="bien" x="330" y="164" width="200" height="26" rx="3"/><text x="430" y="182" font-size="12" text-anchor="middle">datos</text>
+  <rect class="caja" x="530" y="164" width="50" height="26" rx="3"/><text x="555" y="182" font-size="12" text-anchor="middle">FCS</text>
+  <text x="600" y="182" font-size="12" class="tenue">trama</text>
+
+  <text x="0" y="222" font-size="13">Física</text>
+  <text x="130" y="222" font-size="12" class="tenue">10110010 01110001 00101101 … señales en el medio</text>
+  <text x="600" y="222" font-size="12" class="tenue">bits</text>
+</svg>
+<figcaption>Cada capa envuelve lo que recibe. El nombre de la unidad de datos (<a class="g" href="glosario.html#pdu" target="_blank" rel="noopener" title="Glosario: PDU (unidad de datos de protocolo)">PDU</a>) cambia según la capa.</figcaption>
+</figure>
+
+<div class="tabla"><table>
+<thead><tr><th>Capa</th><th>PDU</th><th>Cabecera agrega, entre otros</th></tr></thead>
+<tbody>
+<tr><td>Aplicación</td><td>mensaje</td><td>lo que defina el protocolo (p. ej. <code>GET /index.html</code>)</td></tr>
+<tr><td>Transporte</td><td><a class="g" href="glosario.html#segmento" target="_blank" rel="noopener" title="Glosario: Segmento">segmento</a> (TCP) / datagrama (UDP)</td><td>puertos de origen y destino, número de secuencia</td></tr>
+<tr><td>Red</td><td><a class="g" href="glosario.html#paquete" target="_blank" rel="noopener" title="Glosario: Paquete (datagrama IP)">paquete</a></td><td>IP de origen y destino, TTL, protocolo</td></tr>
+<tr><td>Enlace</td><td><a class="g" href="glosario.html#trama" target="_blank" rel="noopener" title="Glosario: Trama">trama</a></td><td>MAC de origen y destino, tipo; y FCS al final</td></tr>
+<tr><td>Física</td><td>bits</td><td>—</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto: cuánto pesan las cabeceras</span>
+<p>Un segmento TCP lleno, sobre Ethernet, con IPv4:</p>
+<pre>datos de aplicación (MSS)        1460 B
++ cabecera TCP                     20 B
++ cabecera IP                      20 B   → paquete de 1500 B (= MTU)
++ cabecera Ethernet + FCS     14 + 4 B    → trama de 1518 B
++ preámbulo y pausa entre tramas 8 + 12 B → 1538 B ocupan el cable
+Eficiencia = 1460 / 1538 ≈ 94,9 %</pre>
+<p>Con mensajes chicos la eficiencia cae mucho: un byte de datos viaja en una trama de 64 bytes como mínimo. Por eso <a class="g" href="glosario.html#mss" target="_blank" rel="noopener" title="Glosario: MSS (tamaño máximo de segmento)">MSS</a> grandes aprovechan mejor el enlace.</p></div>
+
+<h3>Segmentar, encapsular y fragmentar</h3>
+
+<p>Son tres operaciones distintas:</p>
+<ul>
+<li><a class="g" href="glosario.html#segmentacion" target="_blank" rel="noopener" title="Glosario: Segmentación (TCP)">Segmentar</a> (transporte): TCP divide el flujo de bytes de la aplicación en segmentos de hasta MSS bytes y los numera.</li>
+<li><b>Encapsular</b> (todas las capas): envolver con cabeceras.</li>
+<li><a class="g" href="glosario.html#fragmentacion" target="_blank" rel="noopener" title="Glosario: Fragmentación IP">Fragmentar</a> (red): dividir un paquete IP que no entra en la <a class="g" href="glosario.html#mtu" target="_blank" rel="noopener" title="Glosario: MTU (unidad máxima de transmisión)">MTU</a> de un enlace. TCP elige su MSS justamente para que eso no pase.</li>
+</ul>
+
+<h2 id="viaje">5. El viaje de un paquete</h2>
+
+<p>El paquete IP viaja de extremo a extremo. La trama, en cambio, existe solo dentro de cada enlace: cada router la descarta, mira el paquete, decide el siguiente salto y arma una trama nueva.</p>
+
+<pre>PC1 ──── SW1 ──── R1 ═══════ R2 ──── SW2 ──── PC2
+192.168.10.25   .10.1  10.0.0.1  10.0.0.2  .20.1   192.168.20.10</pre>
+
+<div class="tabla"><table>
+<thead><tr><th>Tramo</th><th>MAC origen</th><th>MAC destino</th><th>IP origen → destino</th><th><a class="g" href="glosario.html#ttl" target="_blank" rel="noopener" title="Glosario: TTL (tiempo de vida)">TTL</a></th></tr></thead>
+<tbody>
+<tr><td>PC1 → R1</td><td>PC1</td><td>R1 (g0/0)</td><td>192.168.10.25 → 192.168.20.10</td><td>64</td></tr>
+<tr><td>R1 → R2</td><td>R1 (g0/1)</td><td>R2 (g0/1)</td><td>192.168.10.25 → 192.168.20.10</td><td>63</td></tr>
+<tr><td>R2 → PC2</td><td>R2 (g0/0)</td><td>PC2</td><td>192.168.10.25 → 192.168.20.10</td><td>62</td></tr>
+</tbody>
+</table></div>
+
+<p>Los switches no aparecen en la tabla: reenvían la trama <b>sin modificarla</b>. Para saber a qué MAC enviar en cada tramo, el emisor usa <a class="g" href="glosario.html#arp" target="_blank" rel="noopener" title="Glosario: ARP (protocolo de resolución de direcciones)">ARP</a>. PC1 no pregunta por la MAC de PC2, que está en otra red, sino por la de su puerta de enlace.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Matiz</span><p>«La IP no cambia» vale <i>normalmente</i>. Un router que hace <a class="g" href="glosario.html#nat" target="_blank" rel="noopener" title="Glosario: NAT (traducción de direcciones de red)">NAT</a> (módulo 3) cambia la IP de origen. Y todo router modifica dos campos de la cabecera IP: el TTL y la suma de verificación.</p></div>
+
+<h2 id="so">6. Los protocolos dentro del sistema operativo</h2>
+
+<p>No existe una pieza física llamada «capa TCP». Lo que existe es software y hardware que cumplen las funciones de cada capa: la <a class="g" href="glosario.html#pila-protocolos" target="_blank" rel="noopener" title="Glosario: Pila de protocolos (stack de red)">pila de protocolos</a> del sistema operativo.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Capa</th><th>Dónde está en Linux</th><th>Cómo se observa</th></tr></thead>
+<tbody>
+<tr><td>Aplicación</td><td>programas y bibliotecas en espacio de usuario (navegador, <code>curl</code>, nginx, el resolvedor DNS)</td><td><code>ps</code>, <code>ss -tlnp</code></td></tr>
+<tr><td>Transporte</td><td>núcleo: TCP, UDP, puertos, retransmisiones</td><td><code>ss -tuna</code>, <code>/proc/net/tcp</code></td></tr>
+<tr><td>Red</td><td>núcleo: IP, ICMP, tabla de rutas, reenvío</td><td><code>ip addr</code>, <code>ip route</code></td></tr>
+<tr><td>Enlace</td><td>núcleo (ARP, puentes) + driver de la placa</td><td><code>ip link</code>, <code>ip neigh</code>, <code>ethtool -i</code></td></tr>
+<tr><td>Física</td><td>la placa de red (<a class="g" href="glosario.html#nic" target="_blank" rel="noopener" title="Glosario: Tarjeta de interfaz de red (NIC)">NIC</a>) y su firmware</td><td><code>ethtool</code></td></tr>
+</tbody>
+</table></div>
+
+<p>Las aplicaciones no arman cabeceras TCP ni IP: le piden al sistema operativo una conexión mediante la API de <a class="g" href="glosario.html#socket" target="_blank" rel="noopener" title="Glosario: Socket">sockets</a>, que se ve en detalle en el módulo 4. Este es el puente con los sistemas operativos: la red es, en buena parte, un servicio del núcleo, igual que la memoria o los archivos.</p>
+
+<h2 id="diagnostico">7. Cómo diagnosticar una falla</h2>
+
+<p>El modelo de capas no es solo teoría: es la herramienta para ordenar un diagnóstico. Un <a class="g" href="glosario.html#metodo-diagnostico" target="_blank" rel="noopener" title="Glosario: Métodos de diagnóstico de red">método de diagnóstico</a> sistemático sigue siempre los mismos pasos:</p>
+<ol>
+<li><b>Definir el problema</b> con precisión: qué no funciona, desde dónde, desde cuándo, a quién afecta. «No anda Internet» no es una definición; «la PC de Ventas no abre ningún sitio, pero sí la intranet» sí lo es.</li>
+<li><b>Reunir información</b>: configuración, mensajes de error, qué cambió últimamente.</li>
+<li><b>Formular una hipótesis</b> y elegir la prueba que la confirme o la descarte.</li>
+<li><b>Corregir</b> una sola cosa por vez y <b>verificar</b> que se resolvió.</li>
+<li><b>Documentar</b> la causa y la solución.</li>
+</ol>
+
+<div class="tabla"><table>
+<thead><tr><th>Enfoque</th><th>Cómo</th><th>Conviene cuando</th></tr></thead>
+<tbody>
+<tr><td>De abajo hacia arriba</td><td>Desde el cable y el enlace, subiendo</td><td>Se sospecha una falla física o hay varias fallas</td></tr>
+<tr><td>De arriba hacia abajo</td><td>Desde la aplicación, bajando</td><td>Falla un solo servicio y lo demás anda</td></tr>
+<tr><td>Divide y vencerás</td><td>Empieza en la capa 3 con <code>ping</code>: si anda, busca arriba; si no, abajo</td><td>Caso general; suele ser el más rápido</td></tr>
+<tr><td>Seguir el camino</td><td>Salto por salto, con <code>traceroute</code></td><td>Falla la comunicación entre redes</td></tr>
+<tr><td>Comparar</td><td>Contra un equipo o una configuración que funciona</td><td>Hay un caso sano a mano</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo: divide y vencerás</span>
+<pre>Síntoma: «no puedo entrar a la intranet»
+ping 192.168.10.53            → responde       ⇒ capas 1 a 3 bien: buscar arriba
+nslookup intranet.empresa     → sin respuesta  ⇒ falla la resolución de nombres
+(si resolviera, el paso siguiente sería probar el puerto con curl -v)</pre></div>
+
+<h3>Práctica 2C: ¿por dónde empiezo?</h3>
+<p>Para cada síntoma, indicá el enfoque con que empezarías, la primera prueba o comando, y qué concluís si da bien y si da mal.</p>
+<ol>
+<li>Una PC muestra «Cable de red desconectado».</li>
+<li>Todo funciona salvo el sistema de facturación, que es una aplicación web interna.</li>
+<li>Desde la oficina no se llega a ningún sitio de Internet, pero sí a la impresora y al servidor interno.</li>
+<li>Un usuario llega a <code>8.8.8.8</code> con ping, pero no a <code>google.com</code>.</li>
+<li>La conexión con la sucursal anduvo durante años y desde ayer no anda. Nadie admite haber tocado nada.</li>
+<li>Una PC nueva del aula tiene la IP <code>169.254.33.10</code>.</li>
+</ol>
+
+
+
+<section class="lab" id="lab-8a">
+<header><h3>Laboratorio 2A · Cómo viaja el paquete en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>Abrí <a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a> y en <b>Ejemplos…</b> elegí <i>Dos subredes</i>. Hacé un ping de una PC de una subred a una de la otra.</li>
+<li>En el recorrido, anotá en qué capa ocurre cada paso (está indicada; al pasar el mouse se ve la capa TCP/IP).</li>
+<li>Apretá <b>Cómo viaja el paquete</b>. Completá una tabla como la de la sección 5 con cada trama de la ida: MAC de origen y de destino, IP de origen y de destino, y TTL.</li>
+<li>Apretá <b>Ver los encabezados</b> e identificá qué está adentro de qué: trama, paquete IP y mensaje ICMP.</li>
+<li>Respondé: ¿con qué TTL llega la respuesta a la PC que hizo el ping, y por qué?</li>
+<li>Repetí con <i>Complejo turístico</i>, eligiendo un origen y un destino separados por dos routers.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las dos tablas de tramas y la respuesta del paso 5 con su justificación.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-8b">
+<header><h3>Laboratorio 2B · Las capas en una captura real</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM) + Wireshark</span><span>90 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Necesitás la VM configurada como se indica en la portada (adaptador NAT para salir a Internet y adaptador «solo anfitrión» para copiar archivos) y Wireshark instalado en tu computadora.</p>
+<ol class="pasos">
+<li>Vaciá la caché ARP, para que la captura muestre la resolución, e iniciá una captura en segundo plano:
+<pre>sudo ip neigh flush dev enp0s3
+sudo tcpdump -ni enp0s3 -w lab8.pcap &amp;</pre></li>
+<li>Generá tráfico de tres protocolos y detené la captura:
+<pre>ping -c 3 8.8.8.8
+dig example.com
+curl -s http://example.com &gt; /dev/null
+sudo pkill tcpdump</pre></li>
+<li>Copiá la captura a tu computadora. Desde una terminal de Windows (PowerShell), usando la IP del adaptador solo anfitrión:
+<pre>scp usuario@192.168.56.101:lab8.pcap .</pre></li>
+<li>Abrila en Wireshark. Para un paquete ICMP, uno DNS y uno HTTP, desplegá el panel de detalles y anotá, de abajo hacia arriba, qué capa es cada línea y un campo de cada una.</li>
+<li>Buscá la consulta ARP. ¿Qué MAC de destino tiene la trama? ¿Por la IP de quién pregunta: la de 8.8.8.8 o la de tu puerta de enlace? ¿Por qué?</li>
+<li>Comprobá la MTU de tu interfaz y el límite que impone el núcleo:
+<pre>ip link show enp0s3 | grep -o 'mtu [0-9]*'
+ping -c 1 -M do -s 1473 8.8.8.8     <span class="c"># 1473 + 8 ICMP + 20 IP = 1501: un byte de más</span></pre>
+<code>-M do</code> prohíbe fragmentar. Leé el error: ¿el paquete llegó a salir de tu equipo?</li>
+<li>La MTU del <b>camino</b> hasta Internet puede ser menor que la de tu placa. Buscala desde Windows, porque el NAT de VirtualBox no respeta la prohibición de fragmentar:
+<pre>ping -f -l 1472 8.8.8.8     <span class="c"># -f: no fragmentar · -l: bytes de datos</span></pre>
+Si responde «Es necesario fragmentar el paquete pero se especificó DF», bajá el tamaño (1464, 1452…) hasta encontrar el mayor que pasa. La MTU del camino es ese tamaño más 28. ¿Te dio 1500? Si no, ¿qué puede haber en tu acceso a Internet que la reduzca?</li>
+<li>Mirá qué driver usa la placa y si el sistema le delega la segmentación:
+<pre>ethtool -i enp0s3 | head -2
+ethtool -k enp0s3 | grep -E 'tcp-segmentation-offload|generic-segmentation'</pre></li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> el archivo <code>lab8.pcap</code>, la tabla del paso 4 y las respuestas de los pasos 5, 6 y 7.</div>
+</div>
+</section>
+
+
+
+<h2 id="desafio">8. Desafío: decodificar una trama a mano</h2>
+
+<p>Esta es una trama capturada, tal como la muestra Wireshark en el panel de bytes. La FCS no aparece porque la placa la quita antes de entregar la trama.</p>
+
+<pre>0000  00 1a 2b 3c 4d 5e 08 00 27 12 34 56 08 00 45 00
+0010  00 54 1c 46 40 00 40 01 7e ef c0 a8 0a 19 c0 a8
+0020  14 0a 08 00 3f 00 00 2a 00 01 10 11 12 13 14 15
+0030  16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25
+0040  26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35
+0050  36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45
+0060  46 47</pre>
+
+<p>Usando el formato de la trama <a class="g" href="glosario.html#ethernet" target="_blank" rel="noopener" title="Glosario: Ethernet (IEEE 802.3)">Ethernet</a> y el de la cabecera IPv4 (RFC 791), respondé:</p>
+<ol>
+<li>MAC de destino y de origen. ¿Qué te dice el OUI del origen?</li>
+<li>¿Qué protocolo transporta la trama? ¿Cómo lo sabés?</li>
+<li>Versión de IP, largo de la cabecera y largo total del paquete.</li>
+<li>TTL, protocolo de la capa superior, IP de origen y de destino, en decimal.</li>
+<li>¿Qué tipo de mensaje ICMP es?</li>
+<li>¿El destino está en la misma red que el origen, si ambos usan /24? Entonces, ¿de quién es la MAC de destino?</li>
+<li>Extra: verificá la suma de verificación de la cabecera IP. Sumá las diez palabras de 16 bits en complemento a uno; el resultado tiene que dar <code>0xffff</code>.</li>
+</ol>
+
+
+
+<h2 id="logros">9. Micro-logros del módulo</h2>
+<ul class="logros" data-id="u8">
+<li>Digo qué hace cada capa OSI con un ejemplo de protocolo y de dispositivo.</li>
+<li>Paso de OSI a TCP/IP y al modelo de cinco capas sin confundirme.</li>
+<li>Nombro la PDU de cada capa y explico qué agrega cada cabecera.</li>
+<li>Completo la tabla de tramas de un ping que cruza dos routers.</li>
+<li>Encuentro en Wireshark las capas de un paquete DNS y de uno HTTP.</li>
+<li>Explico por qué falla un ping de 1473 bytes con DF en una red con MTU 1500.</li>
+<li>Ante un síntoma, elijo un enfoque de diagnóstico y la primera prueba, y justifico la elección.</li>
+</ul>
+
+<h2 id="autoevaluacion">10. Autoevaluación</h2>
+<p class="puntaje"></p>
+
+<div class="preg" data-ok="2"><p>¿Qué cambia en cada router a lo largo del camino?</p>
+<ol><li>Las IP de origen y destino</li><li>Las MAC de la trama y el TTL</li><li>Los puertos TCP</li><li>Nada: el router solo reenvía</li></ol>
+<p class="porque">El router descarta la trama y arma una nueva para el enlace siguiente. Del paquete solo cambian el TTL y la suma de verificación (y las IP si hace NAT).</p></div>
+
+<div class="preg" data-ok="4"><p>En el modelo TCP/IP del RFC 1122, ¿en qué capa están Ethernet y ARP?</p>
+<ol><li>Internet</li><li>Física</li><li>Transporte</li><li>Enlace (acceso a red)</li></ol>
+<p class="porque">El RFC 1122 agrupa las capas 1 y 2 de OSI en la capa de enlace. ARP sirve a IP, pero opera en el enlace local.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Cómo se llama la PDU de la capa de transporte cuando el protocolo es TCP?</p>
+<ol><li>Segmento</li><li>Trama</li><li>Paquete</li><li>Datagrama</li></ol>
+<p class="porque">Segmento en TCP; en UDP se suele decir datagrama. Paquete es de la capa de red y trama, de la de enlace.</p></div>
+
+<div class="preg" data-ok="3"><p>Con MTU 1500 e IPv4, ¿cuál es la MSS habitual de TCP?</p>
+<ol><li>1500</li><li>1480</li><li>1460</li><li>1518</li></ol>
+<p class="porque">1500 − 20 (cabecera IP) − 20 (cabecera TCP) = 1460. 1518 es el tamaño de la trama Ethernet.</p></div>
+
+<div class="preg" data-ok="2"><p>PC1 (192.168.10.25/24) hace ping a 8.8.8.8. ¿Por la IP de quién pregunta en su consulta ARP?</p>
+<ol><li>8.8.8.8</li><li>Su puerta de enlace</li><li>El servidor DNS</li><li>No usa ARP</li></ol>
+<p class="porque">8.8.8.8 está en otra red, así que la trama va a la puerta de enlace. ARP solo resuelve direcciones del propio enlace.</p></div>
+
+<div class="preg" data-ok="4"><p>¿Dónde se implementa TCP en un sistema Linux?</p>
+<ol><li>En la placa de red</li><li>En cada aplicación</li><li>En el navegador</li><li>En el núcleo del sistema operativo</li></ol>
+<p class="porque">TCP, UDP, IP y ARP son parte del núcleo. Las aplicaciones los usan por medio de sockets. La placa puede ayudar (por ejemplo, con TSO), pero no implementa TCP.</p></div>
+
+<div class="preg" data-ok="1"><p>Segmentación y fragmentación…</p>
+<ol><li>ocurren en capas distintas: transporte y red</li><li>son sinónimos</li><li>las hace siempre el router</li><li>las hace siempre la aplicación</li></ol>
+<p class="porque">TCP segmenta en el origen. IP fragmenta cuando un paquete no entra en la MTU de un enlace (en IPv4, puede hacerlo un router).</p></div>
+
+<div class="preg" data-ok="2"><p>Un usuario no puede abrir un sitio, pero el ping a su IP responde. Con «divide y vencerás», ¿cómo seguís?</p>
+<ol><li>Reviso el cable</li><li>Hacia arriba: resolución de nombres, puerto y aplicación</li><li>Reinicio el router</li><li>Cambio la placa de red</li></ol>
+<p class="porque">Si el ping a la IP responde, las capas 1 a 3 funcionan de punta a punta: la falla está más arriba.</p></div>
+
+<div class="caja-nota ia"><span class="lbl">Con IA, pero verificando</span><p>Pegale a un asistente el volcado hexadecimal del desafío y pedile que lo decodifique. Compará su respuesta con la tuya campo por campo. Los asistentes suelen equivocarse al convertir de hexadecimal a decimal y al ubicar los desplazamientos: si encontrás un error, anotalo en tu registro de uso de IA.</p></div>
+
+<h2 id="profundizar">Para profundizar</h2>
+<ul>
+<li>Kurose y Ross (2017), cap. 1, secciones de capas de protocolos y encapsulamiento; Tanenbaum, Feamster y Wetherall (2023), cap. 1, modelos de referencia.</li>
+<li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Peterson y Davie</a>, cap. 1 (<i>Foundation</i>): arquitectura en capas y la API de sockets como interfaz del sistema operativo.</li>
+<li><a href="https://gaia.cs.umass.edu/kurose_ross/wireshark.php" target="_blank" rel="noopener">Wireshark Labs de Kurose y Ross</a>: <i>Getting Started</i> y <i>Ethernet and ARP</i>. Son un buen repaso del Lab 2B con otras capturas.</li>
+</ul>
+<p>Peterson y Davie, Grigorik y los Wireshark Labs están en inglés y son de acceso libre.</p>
+
+
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Módulo 2 de 5</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-u8';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>

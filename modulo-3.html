@@ -1,0 +1,727 @@
+<title>Módulo 3: Direccionamiento IP y enrutamiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Portada del curso</a><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a><a href="modulo-2.html">← Módulo 2</a><a href="modulo-4.html">Módulo 4 →</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Módulo 3 · Semanas 5 a 8 · 20 horas</p>
+      <h1>Direccionamiento IP, subnetting y enrutamiento</h1>
+      <p class="bajada">Cómo se arma una dirección IPv4, cómo se divide un bloque en subredes, cómo encuentra un paquete el camino entre redes y qué servicios (NAT, DHCP, DNS) hacen que todo eso funcione en una red real.</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="on" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="on" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  <div><p class="objetivos-tit">Al terminar el módulo vas a poder</p><ul class="objetivos"><li>Convertir direcciones entre decimal y binario y obtener red, broadcast y rango de hosts para cualquier prefijo.</li><li>Dividir un bloque en subredes iguales y diseñar un esquema VLSM para requerimientos dados.</li><li>Explicar cómo decide un host si entrega un paquete directamente o a su puerta de enlace, y cómo elige ruta un router.</li><li>Configurar y diagnosticar rutas estáticas, la ruta por defecto y NAT, en OpenRedLab y en Linux.</li><li>Describir el proceso DORA de DHCP y la resolución DNS, y diagnosticar fallas de nombres con dig y nslookup.</li><li>Explicar cómo se interconectan los proveedores de Internet (tránsito, peering, IXP).</li><li>Explicar cómo usa Docker el NAT y la redirección de puertos, y diagnosticar la conectividad entre contenedores.</li></ul></div>
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones del módulo"><h2>En este módulo</h2><ol><li><a href="#ipv4">1. La dirección IPv4</a></li><li><a href="#mascara">2. Máscara, prefijo y cálculo de una red</a></li><li><a href="#clases">3. De las clases a CIDR</a></li><li><a href="#subnetting">4. Subnetting</a></li><li><a href="#vlsm">5. VLSM</a></li><li><a href="#privadas-nat">6. Direcciones privadas y NAT</a></li><li><a href="#enrutamiento">7. Enrutamiento</a></li><li><a href="#dhcp">8. DHCP</a></li><li><a href="#dns">9. DNS</a></li><li><a href="#isp">10. Cómo se conecta Internet</a></li><li class="lab"><a href="#lab-9a">Laboratorio 3A · Cálculo y diagnóstico en OpenRedLab</a></li><li class="lab"><a href="#lab-9b">Laboratorio 3B · Servicios: NAT, DNS y DHCP en OpenRedLab</a></li><li class="lab"><a href="#lab-9c">Laboratorio 3C · Un router de verdad, dentro de Linux</a></li><li class="lab"><a href="#lab-9d">Laboratorio 3D · DHCP y DNS en tu VM</a></li><li class="lab"><a href="#lab-9e">Laboratorio 3E · NAT y DNS dentro de Docker</a></li><li><a href="#ejercitacion">11. Ejercitación</a></li><li><a href="#logros">12. Micro-logros del módulo</a></li><li><a href="#autoevaluacion">13. Autoevaluación</a></li><li><a href="#profundizar">Para profundizar</a></li></ol></nav>
+  <main class="texto">
+<h2 id="ipv4">1. La dirección IPv4</h2>
+
+<p>Una <a class="g" href="glosario.html#direccion-ip" target="_blank" rel="noopener" title="Glosario: Dirección IP">dirección IP</a> identifica a una <b>interfaz</b> de red e indica a qué red pertenece. En <a class="g" href="glosario.html#ipv4" target="_blank" rel="noopener" title="Glosario: IPv4">IPv4</a> tiene 32 bits, que se escriben como cuatro <b>octetos</b> en decimal separados por puntos.</p>
+
+<h3>Decimal y binario</h3>
+
+<p>Cada octeto tiene 8 bits con estos pesos:</p>
+<pre>128  64  32  16   8   4   2   1</pre>
+<p>Para pasar de decimal a binario, se va restando el peso más grande que entra:</p>
+<pre>200 → 200−128=72 → 72−64=8 → 8−8=0
+      1    1    0    0    1    0    0    0    = 11001000
+ 10 →                     1    0    1    0   = 00001010</pre>
+<p>Para pasar de binario a decimal, se suman los pesos de los bits en 1: <code>10101000</code> = 128 + 32 + 8 = 168.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Clave</span><p>Los puntos solo separan octetos para que sea más fácil leer. La división entre <b>parte de red</b> y <b>parte de host</b> no la marcan los puntos: la marca el <b>prefijo</b>, y puede caer en medio de un octeto.</p></div>
+
+<h2 id="mascara">2. Máscara, prefijo y cálculo de una red</h2>
+
+<p>La <a class="g" href="glosario.html#mascara" target="_blank" rel="noopener" title="Glosario: Máscara de subred">máscara</a> tiene 32 bits: unos para la parte de red y ceros para la parte de host, siempre contiguos. El <a class="g" href="glosario.html#cidr" target="_blank" rel="noopener" title="Glosario: CIDR y prefijo">prefijo CIDR</a> dice cuántos unos hay: <code>/24</code> = <code>255.255.255.0</code>.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Prefijo</th><th>Máscara</th><th>Último octeto de la máscara en binario</th><th>Salto</th></tr></thead>
+<tbody>
+<tr><td>/24</td><td>255.255.255.0</td><td>00000000</td><td>256</td></tr>
+<tr><td>/25</td><td>255.255.255.128</td><td>10000000</td><td>128</td></tr>
+<tr><td>/26</td><td>255.255.255.192</td><td>11000000</td><td>64</td></tr>
+<tr><td>/27</td><td>255.255.255.224</td><td>11100000</td><td>32</td></tr>
+<tr><td>/28</td><td>255.255.255.240</td><td>11110000</td><td>16</td></tr>
+<tr><td>/29</td><td>255.255.255.248</td><td>11111000</td><td>8</td></tr>
+<tr><td>/30</td><td>255.255.255.252</td><td>11111100</td><td>4</td></tr>
+</tbody>
+</table></div>
+
+<p>La <a class="g" href="glosario.html#direccion-red" target="_blank" rel="noopener" title="Glosario: Dirección de red">dirección de red</a> se obtiene con un AND bit a bit entre la IP y la máscara. La <a class="g" href="glosario.html#direccion-broadcast" target="_blank" rel="noopener" title="Glosario: Dirección de broadcast (difusión dirigida)">dirección de broadcast</a> pone en 1 todos los bits de host. Entre las dos están los hosts utilizables: <b>2<sup>bits de host</sup> − 2</b>.</p>
+
+<h3>Método rápido: el salto</h3>
+<ol>
+<li>Buscá el <b>octeto interesante</b>: aquel donde la máscara no es 255 ni 0.</li>
+<li><b>Salto</b> = 256 − valor de la máscara en ese octeto.</li>
+<li>La red empieza en el múltiplo del salto más grande que no supera el valor de la IP en ese octeto.</li>
+<li>El broadcast es la red siguiente menos uno.</li>
+</ol>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto 1: 172.16.45.200/27</span>
+<pre>Máscara 255.255.255.224 → octeto interesante: el 4.º → salto 256−224 = 32
+Múltiplos de 32: 0, 32, 64, … 160, 192, 224 → 200 está en el bloque de 192
+Red        172.16.45.192
+Broadcast  172.16.45.223      (siguiente red .224 − 1)
+Hosts      172.16.45.193 – 172.16.45.222   (30 utilizables)</pre></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto 2: 10.1.77.9/20 (el límite cae en el 3.er octeto)</span>
+<pre>/20 → 255.255.240.0 → octeto interesante: el 3.º → salto 256−240 = 16
+Múltiplos de 16: … 48, 64, 80 … → 77 está en el bloque de 64
+Red        10.1.64.0
+Broadcast  10.1.79.255
+Hosts      10.1.64.1 – 10.1.79.254     (2¹² − 2 = 4094 utilizables)</pre></div>
+
+<p>Comprobá tus cálculos con la pestaña <b>Cálculo de subred</b> de OpenRedLab, que muestra el AND en binario.</p>
+
+<h2 id="clases">3. De las clases a CIDR</h2>
+
+<p>Hasta 1993, IPv4 usaba <a class="g" href="glosario.html#clases-ip" target="_blank" rel="noopener" title="Glosario: Clases de direcciones IP (histórico)">clases</a>: los primeros bits fijaban la máscara (A = /8, B = /16, C = /24). Una organización que necesitaba 500 direcciones no tenía término medio: una C le quedaba chica (254) y una B era enorme (65 534). Eso desperdició direcciones y agotó rápido las clases B.</p>
+
+<p><a class="g" href="glosario.html#cidr" target="_blank" rel="noopener" title="Glosario: CIDR y prefijo">CIDR</a> permite cortar en cualquier bit. A esa organización se le asigna un <code>/23</code>: 512 direcciones, 510 utilizables. Además, CIDR permite <b>agregar rutas</b>: un proveedor anuncia un solo prefijo grande en lugar de cientos de redes chicas.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Hoy</span><p>No se mira la clase para saber la máscara: se mira el prefijo. <code>10.1.2.0/24</code> es una configuración perfectamente válida, aunque 10 «sea de clase A».</p></div>
+
+<h2 id="subnetting">4. Subnetting</h2>
+
+<p>El <a class="g" href="glosario.html#subnetting" target="_blank" rel="noopener" title="Glosario: Subnetting (división en subredes)">subnetting</a> divide un bloque en subredes tomando bits de la parte de host. Con <i>n</i> bits prestados se obtienen 2<sup><i>n</i></sup> subredes, y cada una tiene la mitad de tamaño por cada bit.</p>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto 3: 192.168.10.0/24 en 4 subredes</span>
+<pre>4 subredes → 2 bits prestados → /26 → salto 64
+
+Subred   Red                Hosts                 Broadcast
+1        192.168.10.0/26    .1   – .62            .63
+2        192.168.10.64/26   .65  – .126           .127
+3        192.168.10.128/26  .129 – .190           .191
+4        192.168.10.192/26  .193 – .254           .255</pre></div>
+
+<p>¿Para qué dividir? Para separar áreas o funciones (administración, alumnos, cámaras), achicar los <a class="g" href="glosario.html#dominio-broadcast" target="_blank" rel="noopener" title="Glosario: Dominio de broadcast">dominios de broadcast</a> y poder aplicar reglas de seguridad entre subredes, que es donde se ubica un firewall.</p>
+
+<h2 id="vlsm">5. VLSM</h2>
+
+<p>Dividir todo en partes iguales desperdicia direcciones cuando las áreas tienen tamaños distintos. Con <a class="g" href="glosario.html#vlsm" target="_blank" rel="noopener" title="Glosario: VLSM (máscaras de longitud variable)">VLSM</a>, cada subred recibe el prefijo justo para sus hosts.</p>
+
+<p><b>Procedimiento:</b></p>
+<ol>
+<li>Ordená los requerimientos de mayor a menor.</li>
+<li>Para cada uno, sumá la puerta de enlace y elegí el menor prefijo cuyo 2<sup>h</sup> − 2 alcance.</li>
+<li>Asignalo en la primera dirección libre que sea <b>múltiplo de su tamaño</b> (alineada).</li>
+<li>Seguí con el siguiente, desde donde terminó el anterior.</li>
+</ol>
+
+<div class="caja-nota ejemplo"><span class="lbl">Ejemplo resuelto 4: una PyME en 192.168.10.0/24</span>
+<pre>Área            Hosts  Prefijo  Red                 Rango utilizable       Broadcast
+Administración   50     /26     192.168.10.0        .1   – .62             .63
+Ventas           25     /27     192.168.10.64       .65  – .94             .95
+TIC              10     /28     192.168.10.96       .97  – .110            .111
+Enlace R1–R2      2     /30     192.168.10.112      .113 – .114            .115
+Libre: 192.168.10.116 – 192.168.10.255 para crecer</pre>
+<figure>
+<svg viewBox="0 0 680 92" role="img" aria-label="El bloque /24 repartido: /26 de 64 direcciones, /27 de 32, /28 de 16, /30 de 4 y el resto libre">
+  <rect class="acento" x="20" y="20" width="160" height="34"/>
+  <rect class="bien" x="180" y="20" width="80" height="34"/>
+  <rect class="aviso" x="260" y="20" width="40" height="34"/>
+  <rect class="acento" x="300" y="20" width="10" height="34"/>
+  <rect class="caja" x="310" y="20" width="350" height="34"/>
+  <text x="100" y="42" font-size="12" text-anchor="middle">Admin /26</text>
+  <text x="220" y="42" font-size="12" text-anchor="middle">Ventas /27</text>
+  <text x="280" y="42" font-size="11" text-anchor="middle">/28</text>
+  <text x="485" y="42" font-size="12" text-anchor="middle" class="tenue">libre (140 direcciones)</text>
+  <text x="20" y="72" font-size="11" class="tenue">.0</text>
+  <text x="180" y="72" font-size="11" class="tenue" text-anchor="middle">.64</text>
+  <text x="260" y="72" font-size="11" class="tenue" text-anchor="middle">.96</text>
+  <text x="305" y="88" font-size="11" class="tenue" text-anchor="middle">.112 /30</text>
+  <text x="660" y="72" font-size="11" class="tenue" text-anchor="end">.255</text>
+</svg>
+<figcaption>El mismo /24 a escala: cada bloque arranca en un múltiplo de su tamaño.</figcaption>
+</figure></div>
+
+<div class="caja-nota ojo"><span class="lbl">Error frecuente</span><p>Contar solo las PC y olvidar la interfaz del router. 30 PC más su puerta de enlace son 31 direcciones: no entran en un /27 (30 utilizables).</p></div>
+
+<h2 id="privadas-nat">6. Direcciones privadas y NAT</h2>
+
+<p>El RFC 1918 reserva tres bloques de <a class="g" href="glosario.html#direcciones-privadas" target="_blank" rel="noopener" title="Glosario: Direcciones privadas y públicas">direcciones privadas</a> que cualquiera puede usar dentro de su red y que Internet no enruta: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code> (de 172.16 a 172.31) y <code>192.168.0.0/16</code>. Otros bloques especiales: <code>127.0.0.0/8</code> (<a class="g" href="glosario.html#loopback" target="_blank" rel="noopener" title="Glosario: Loopback (localhost)">loopback</a>), <code>169.254.0.0/16</code> (la <a class="g" href="glosario.html#enlace-local" target="_blank" rel="noopener" title="Glosario: Dirección de enlace local (169.254.0.0/16)">dirección de enlace local</a> que se asigna sola un equipo sin DHCP) y <code>100.64.0.0/10</code> (<a class="g" href="glosario.html#cgnat" target="_blank" rel="noopener" title="Glosario: CGNAT (NAT de grado operador)">CGNAT</a> de los proveedores).</p>
+
+<p>Para que un equipo con IP privada salga a Internet, el router de borde hace <a class="g" href="glosario.html#nat" target="_blank" rel="noopener" title="Glosario: NAT (traducción de direcciones de red)">NAT</a>: reemplaza la IP de origen privada por su IP pública y anota la conversación en una tabla para devolver la respuesta. En la variante de casi todas las redes (NAPT o PAT), muchos equipos comparten una IP pública y se distinguen por el <a class="g" href="glosario.html#puerto" target="_blank" rel="noopener" title="Glosario: Puerto">puerto</a> de origen.</p>
+
+<pre>192.168.1.20:52341 ─┐                         ┌─ respuesta a 203.0.113.7:40001
+                    ├─► NAT ─► 203.0.113.7 ───┤   → se traduce a 192.168.1.20:52341
+192.168.1.21:52341 ─┘   (tabla de traducciones)</pre>
+
+<p>Consecuencia: desde afuera no se puede iniciar una conexión hacia un equipo interno, salvo que se configure una <a class="g" href="glosario.html#redireccion-puertos" target="_blank" rel="noopener" title="Glosario: Redirección de puertos (port forwarding)">redirección de puertos</a>. Eso es lo que hace falta para publicar un servidor.</p>
+
+<h3>Lo mismo, en tu computadora: Docker</h3>
+
+<p>Si usás contenedores, ya usás NAT. Docker crea una red interna (<code>docker0</code>, normalmente <code>172.17.0.0/16</code>), le da a cada contenedor una IP privada y hace NAT de salida. Para que algo de afuera llegue a un contenedor hay que <b>publicar un puerto</b>: <code>docker run -p 8080:80 nginx</code> es una redirección de puertos. Lo que llega al puerto 8080 de la máquina va al puerto 80 del contenedor.</p>
+
+<p>Cada contenedor tiene su propio <a class="g" href="glosario.html#network-namespace" target="_blank" rel="noopener" title="Glosario: Espacio de nombres de red (network namespace)">espacio de nombres de red</a>, como los del laboratorio 3C, y por eso su propia IP y su propio <code>localhost</code> (ver <a class="g" href="glosario.html#red-docker" target="_blank" rel="noopener" title="Glosario: Redes en Docker">Redes en Docker</a>).</p>
+
+<div class="caja-nota ojo"><span class="lbl">Error frecuente</span><p>Dentro de un contenedor, <code>localhost:5432</code> no es la base de datos de tu máquina: es el propio contenedor. Los contenedores conectados a una misma red creada con <code>docker network create</code> se encuentran por nombre (<code>db:5432</code>), gracias al DNS interno de Docker.</p></div>
+
+<h2 id="enrutamiento">7. Enrutamiento</h2>
+
+<p><i>El subnetting define cómo se dividen las redes; el <a class="g" href="glosario.html#enrutamiento" target="_blank" rel="noopener" title="Glosario: Enrutamiento y reenvío">enrutamiento</a>, cómo se llega de una a otra.</i></p>
+
+<h3>La decisión del host</h3>
+<pre>¿El destino está en mi red?   (IP destino AND máscara) == (mi IP AND máscara)
+   sí → ARP por el destino y entrega directa
+   no → ARP por la puerta de enlace y le entrego la trama a ella</pre>
+
+<p>La <a class="g" href="glosario.html#puerta-enlace" target="_blank" rel="noopener" title="Glosario: Puerta de enlace predeterminada (default gateway)">puerta de enlace predeterminada</a> tiene que estar <b>dentro de la subred del host</b>. Si no, el host no puede alcanzarla.</p>
+
+<h3>La tabla de rutas</h3>
+
+<p>Cada host y cada router tiene una <a class="g" href="glosario.html#tabla-rutas" target="_blank" rel="noopener" title="Glosario: Tabla de rutas (tabla de enrutamiento)">tabla de rutas</a>. Para cada paquete se elige la entrada que coincide con el destino y tiene el <a class="g" href="glosario.html#prefijo-mas-largo" target="_blank" rel="noopener" title="Glosario: Coincidencia del prefijo más largo">prefijo más largo</a>, es decir, la más específica.</p>
+
+<pre>Destino            Siguiente salto    Interfaz
+192.168.10.0/24    directa            g0/0
+192.168.20.0/24    10.0.0.2           g0/1
+0.0.0.0/0          200.51.3.1         g0/2     ← ruta por defecto</pre>
+
+<ul>
+<li><b>Rutas conectadas:</b> las redes de las propias interfaces. Aparecen solas.</li>
+<li><a class="g" href="glosario.html#ruta-estatica" target="_blank" rel="noopener" title="Glosario: Ruta estática">Rutas estáticas</a>: se cargan a mano: red destino + <a class="g" href="glosario.html#siguiente-salto" target="_blank" rel="noopener" title="Glosario: Siguiente salto (next hop)">siguiente salto</a>, que debe estar en una red conectada.</li>
+<li><a class="g" href="glosario.html#ruta-por-defecto" target="_blank" rel="noopener" title="Glosario: Ruta por defecto">Ruta por defecto</a> (<code>0.0.0.0/0</code>): la que se usa si no hay otra más específica.</li>
+<li><b>Rutas dinámicas:</b> las aprenden protocolos como OSPF o BGP. Se mencionan para contexto; no se configuran en esta materia.</li>
+</ul>
+
+<div class="caja-nota ojo"><span class="lbl">La ruta de vuelta</span><p>Que el paquete llegue no alcanza: la respuesta también tiene que volver. Una de las fallas más comunes es cargar la ruta de ida en un router y olvidar la de vuelta en el otro. El ping «sale» pero no vuelve nada (en OpenRedLab, D12).</p></div>
+
+<p>Cada router decrementa el <a class="g" href="glosario.html#ttl" target="_blank" rel="noopener" title="Glosario: TTL (tiempo de vida)">TTL</a>. Herramientas que lo aprovechan: <a class="g" href="glosario.html#ping" target="_blank" rel="noopener" title="Glosario: ping">ping</a> (¿hay ida y vuelta?) y <a class="g" href="glosario.html#traceroute" target="_blank" rel="noopener" title="Glosario: traceroute / tracert">traceroute</a> (¿por qué routers pasa?), ambas basadas en <a class="g" href="glosario.html#icmp" target="_blank" rel="noopener" title="Glosario: ICMP">ICMP</a>.</p>
+
+<h2 id="dhcp">8. DHCP</h2>
+
+<p><a class="g" href="glosario.html#dhcp" target="_blank" rel="noopener" title="Glosario: DHCP">DHCP</a> le entrega a cada equipo, en préstamo, su IP, máscara, puerta de enlace y servidores DNS. Usa UDP 67 (servidor) y 68 (cliente). Funciona en cuatro pasos, <b>DORA</b>:</p>
+
+<pre>Cliente (sin IP)                                  Servidor
+  │── DISCOVER  broadcast 0.0.0.0 → 255.255.255.255 ──►│
+  │◄── OFFER    «te ofrezco 192.168.10.57/24»      ────│
+  │── REQUEST   broadcast «quiero esa»             ────►│
+  │◄── ACK      «es tuya por 24 h; gw .1; DNS …»   ────│</pre>
+
+<p>Como depende del broadcast, un servidor DHCP solo atiende su dominio de broadcast. Para otras subredes, el router hace de <b>agente de retransmisión</b> (<i>relay</i>). Si un equipo termina con una IP <code>169.254.x.x</code>, no consiguió servidor DHCP.</p>
+
+<h2 id="dns">9. DNS</h2>
+
+<p><a class="g" href="glosario.html#dns" target="_blank" rel="noopener" title="Glosario: DNS (sistema de nombres de dominio)">DNS</a> traduce nombres a direcciones y a otros datos. Es una base de datos distribuida y jerárquica:</p>
+
+<pre>                     . (raíz)
+          ┌──────────┼──────────┐
+        .com        .ar        .org          ← TLD
+          │          │
+     ejemplo.com   edu.ar                   ← servidores autoritativos
+          │
+   www.ejemplo.com  →  A 203.0.113.10</pre>
+
+<p>Tu equipo le pregunta a un <b>resolutor recursivo</b>, que puede ser el del proveedor, uno público o el reenviador de tu router. Ese resolutor hace consultas <b>iterativas</b>: pregunta a la raíz, que lo deriva al TLD, que lo deriva al autoritativo. Después guarda la respuesta en caché durante el TTL del registro.</p>
+
+<div class="tabla"><table>
+<thead><tr><th><a class="g" href="glosario.html#registro-dns" target="_blank" rel="noopener" title="Glosario: Registros DNS (A, AAAA, CNAME, MX, NS, PTR)">Registro</a></th><th>Para qué</th></tr></thead>
+<tbody>
+<tr><td>A / AAAA</td><td>nombre → IPv4 / IPv6</td></tr>
+<tr><td>CNAME</td><td>alias → nombre canónico</td></tr>
+<tr><td>MX</td><td>servidor de correo del dominio, con preferencia</td></tr>
+<tr><td>NS</td><td>servidores autoritativos de la zona</td></tr>
+<tr><td>PTR</td><td>IP → nombre (resolución inversa, bajo <code>in-addr.arpa</code>)</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota pensar"><span class="lbl">Para pensar</span><p>Un usuario dice «no anda Internet», pero <code>ping 8.8.8.8</code> responde y <code>ping google.com</code> no. ¿Qué capa y qué servicio sospechás? ¿Qué comando usás para confirmarlo?</p></div>
+
+
+
+<h2 id="isp">10. Cómo se conecta Internet</h2>
+
+<p>Internet es una red de redes. Cada red administrada por una organización es un <a class="g" href="glosario.html#sistema-autonomo" target="_blank" rel="noopener" title="Glosario: Sistema autónomo (AS)">sistema autónomo</a> con su número (ASN), y las redes se conectan con dos tipos de acuerdo:</p>
+<ul>
+<li><a class="g" href="glosario.html#transito" target="_blank" rel="noopener" title="Glosario: Tránsito">Tránsito</a>: un <a class="g" href="glosario.html#isp" target="_blank" rel="noopener" title="Glosario: ISP (proveedor de servicios de Internet)">ISP</a> le paga a otro mayor para llegar a <b>toda</b> Internet.</li>
+<li><a class="g" href="glosario.html#peering" target="_blank" rel="noopener" title="Glosario: Peering">Peering</a>: dos redes intercambian directamente el tráfico de sus clientes, normalmente sin pago. Sirve solo para llegar a las redes de las dos partes.</li>
+</ul>
+<p>Muchos acuerdos de peering se concretan en un <a class="g" href="glosario.html#ixp" target="_blank" rel="noopener" title="Glosario: IXP (punto de intercambio de tráfico)">IXP</a>, un punto de intercambio donde muchas redes se conectan a un mismo switch. En Argentina, CABASE opera IXP en distintas ciudades, para que el tráfico entre redes del país no tenga que salir al exterior y volver.</p>
+
+<section class="lab" id="lab-9a">
+<header><h3>Laboratorio 3A · Cálculo y diagnóstico en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>3 encuentros</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li><b>Cálculo.</b> En modo <b>Subredes</b>, cargá las IP de los ejemplos resueltos 1 y 2 y comparalas con tu cálculo. Después resolvé la ejercitación de la sección 11 y verificá cada respuesta.</li>
+<li><b>Lab 1: un solo problema.</b> Descargá <a href="https://github.com/fhleonardi/openredlab/blob/main/escenarios/lab1-ALUMNO.json" target="_blank" rel="noopener">lab1-ALUMNO.json</a> e importalo (o arrastralo al lienzo). Cumplí el objetivo: la cámara tiene que llegar al servidor. El simulador no avisa las fallas: encontrarlas es el ejercicio.</li>
+<li><b>Lab 2: tres problemas</b> (<a href="https://github.com/fhleonardi/openredlab/blob/main/escenarios/lab2-ALUMNO.json" target="_blank" rel="noopener">lab2-ALUMNO.json</a>). Para cada falla, anotá el síntoma, el código de diagnóstico, la causa y la corrección.</li>
+<li><b>Lab 3: el problema invisible</b> (<a href="https://github.com/fhleonardi/openredlab/blob/main/escenarios/lab3-ALUMNO.json" target="_blank" rel="noopener">lab3-ALUMNO.json</a>). Pista: algunas fallas solo aparecen cuando se arregla otra.</li>
+<li><b>Desafío VLSM.</b> Importá <a href="https://github.com/fhleonardi/openredlab/blob/main/escenarios/desafio-complejo-termal.json" target="_blank" rel="noopener">desafio-complejo-termal.json</a>. Repartí el bloque 10.45.7.0/24 entre los sectores (Wi-Fi de huéspedes 60, Administración 25, CCTV 12, Servidores 3, enlace R1–R2 2). Primero en papel, después configurando los equipos. Al final apretá <b>Verificar diseño VLSM</b>.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> por cada laboratorio tu red corregida (<i>Exportar</i>, como <code>ApellidoNombre_lab1.json</code>), el registro de eventos (<i>Exportar registro</i>) y una línea por problema: síntoma, causa y corrección. Del desafío, la tabla VLSM en papel y el <code>.json</code>.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-9b">
+<header><h3>Laboratorio 3B · Servicios: NAT, DNS y DHCP en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>90 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>Abrí el ejemplo <i>Oficina con DNS propio</i>. Hacé ping a <code>intranet.oficina.local</code> y a <code>google.com</code>. En el recorrido, distinguí la respuesta autoritativa de la consulta recursiva e iterativa. Repetí el segundo ping: ¿de dónde sale ahora la respuesta?</li>
+<li>Con <b>Consultar DNS</b>, pedí los registros MX y NS de <code>oficina.local</code>.</li>
+<li>Quitale el NAT al puerto del router que da a Internet y hacé ping a 8.8.8.8. Anotá el diagnóstico (D28) y explicá por qué el pedido llega pero la respuesta no vuelve.</li>
+<li>Configurá un router para repartir direcciones por DHCP y mirá los cuatro mensajes DORA animados sobre los cables.</li>
+<li>Abrí <i>Dos ISP: peering y tránsito</i>. Hacé un ping entre los clientes de los dos proveedores y otro a google.com: ¿por dónde va cada uno? Cortá el cable de peering y explicá por qué el tráfico no se desvía solo.</li>
+<li><b>Lab 4: la oficina sin servicios</b> (<a href="https://github.com/fhleonardi/openredlab/blob/main/escenarios/lab4-ALUMNO.json" target="_blank" rel="noopener">lab4-ALUMNO.json</a>): la intranet tiene que responder, los nombres de Internet tienen que resolverse y la oficina tiene que salir a Internet.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las respuestas de los pasos 1, 3 y 5 y el Lab 4 resuelto, con una línea por problema.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-9c">
+<header><h3>Laboratorio 3C · Un router de verdad, dentro de Linux</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM)</span><span>2 encuentros</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Linux permite crear <b>espacios de nombres de red</b> (<i>network namespaces</i>): pilas de red independientes, cada una con sus interfaces, su tabla de rutas y sus reglas. Con ellos, una sola VM alcanza para armar dos PC y un router, unidos por cables virtuales (pares <code>veth</code>). Es la misma pila de red del módulo 2, repetida tres veces.</p>
+<pre>  pc1                     r1                      pc2
+192.168.10.10/24 ── .10.1 [r1-e0]  [r1-e1] .20.1 ── 192.168.20.10/24</pre>
+<ol class="pasos">
+<li>Creá los tres equipos y los dos cables, y conectá cada punta a su equipo:
+<pre>sudo ip netns add pc1
+sudo ip netns add r1
+sudo ip netns add pc2
+sudo ip link add veth-pc1 type veth peer name r1-e0
+sudo ip link add veth-pc2 type veth peer name r1-e1
+sudo ip link set veth-pc1 netns pc1
+sudo ip link set r1-e0 netns r1
+sudo ip link set veth-pc2 netns pc2
+sudo ip link set r1-e1 netns r1</pre></li>
+<li>Direccioná y encendé las interfaces (<code>ip -n</code> ejecuta el comando dentro de un namespace):
+<pre>sudo ip -n pc1 addr add 192.168.10.10/24 dev veth-pc1
+sudo ip -n r1  addr add 192.168.10.1/24  dev r1-e0
+sudo ip -n r1  addr add 192.168.20.1/24  dev r1-e1
+sudo ip -n pc2 addr add 192.168.20.10/24 dev veth-pc2
+for ns in pc1 r1 pc2; do sudo ip -n $ns link set lo up; done
+sudo ip -n pc1 link set veth-pc1 up
+sudo ip -n r1  link set r1-e0 up
+sudo ip -n r1  link set r1-e1 up
+sudo ip -n pc2 link set veth-pc2 up</pre></li>
+<li>Convertí a <code>r1</code> en router: por defecto Linux no reenvía paquetes entre interfaces.
+<pre>sudo ip netns exec r1 sysctl -w net.ipv4.ip_forward=1</pre></li>
+<li>Probá desde pc1 y leé el error. ¿Qué le falta a pc1?
+<pre>sudo ip netns exec pc1 ping -c 2 192.168.20.10
+sudo ip -n pc1 route</pre></li>
+<li>Agregale la puerta de enlace a pc1 y probá de nuevo:
+<pre>sudo ip -n pc1 route add default via 192.168.10.1
+sudo ip netns exec pc1 ping -c 2 192.168.20.10</pre>
+Sigue fallando, pero de otra manera. Para ver qué pasa, en una <b>segunda terminal</b> mirá el cable de pc2 mientras repetís el ping:
+<pre>sudo ip netns exec r1 tcpdump -ni r1-e1 icmp</pre>
+¿Llegan las solicitudes a pc2? ¿Salen respuestas? ¿Por qué?</li>
+<li>Cargá la ruta de vuelta y comprobá que funcione, con el recorrido incluido:
+<pre>sudo ip -n pc2 route add default via 192.168.20.1
+sudo ip netns exec pc1 ping -c 2 192.168.20.10
+sudo ip netns exec pc1 traceroute -n 192.168.20.10</pre>
+Mirá el TTL de las respuestas. ¿Por qué no es 64?</li>
+<li><b>NAT.</b> Borrá la ruta de vuelta de pc2 y, en lugar de restaurarla, hacé que r1 traduzca las direcciones que salen hacia pc2:
+<pre>sudo ip -n pc2 route del default
+sudo ip netns exec r1 nft add table ip nat
+sudo ip netns exec r1 nft add chain ip nat post '{ type nat hook postrouting priority 100 ; }'
+sudo ip netns exec r1 nft add rule ip nat post oifname "r1-e1" masquerade
+sudo ip netns exec pc1 ping -c 2 192.168.20.10</pre>
+Con <code>tcpdump</code> en <code>r1-e1</code>, mirá la IP de origen que ve pc2. ¿Por qué ahora pc2 no necesita ruta de vuelta?</li>
+<li>Al terminar, borrá todo (los namespaces se llevan sus interfaces):
+<pre>sudo ip netns del pc1; sudo ip netns del r1; sudo ip netns del pc2</pre></li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la salida de los pasos 4, 5, 6 y 7, con una explicación de cada error y del TTL, y la tabla de rutas final de cada equipo (<code>ip -n pc1 route</code> y lo mismo para los otros).</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-9d">
+<header><h3>Laboratorio 3D · DHCP y DNS en tu VM</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM)</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>¿Tu IP es dinámica? ¿Quién te la dio y por cuánto tiempo?
+<pre>ip -4 addr show enp0s3        <span class="c"># buscá "dynamic" y "valid_lft"</span>
+networkctl status enp0s3</pre></li>
+<li>Capturá una renovación del préstamo:
+<pre>sudo tcpdump -ni enp0s3 port 67 or port 68 &amp;
+sudo networkctl renew enp0s3
+sudo pkill tcpdump</pre>
+¿Ves los cuatro mensajes DORA o solo dos? ¿Por qué una renovación no necesita DISCOVER ni OFFER?</li>
+<li>¿A quién le pregunta tu sistema los nombres?
+<pre>cat /etc/resolv.conf
+resolvectl status | head -20</pre></li>
+<li>Resolvé, comparando servidores:
+<pre>dig www.unl.edu.ar
+dig @1.1.1.1 www.unl.edu.ar
+dig +short MX gmail.com
+dig +short NS edu.ar
+dig -x 8.8.8.8</pre></li>
+<li>Seguí la jerarquía completa y anotá qué servidor responde en cada nivel:
+<pre>dig +trace www.unl.edu.ar</pre></li>
+<li>Repetí <code>dig www.unl.edu.ar</code> dos veces seguidas y compará el TTL y el tiempo de consulta (<i>Query time</i>). Explicá la diferencia.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las salidas comentadas de los pasos 2, 5 y 6, y en una línea quién es tu resolutor y por qué <code>/etc/resolv.conf</code> dice 127.0.0.53.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-9e">
+<header><h3>Laboratorio 3E · NAT y DNS dentro de Docker</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM)</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>Instalá Docker y mirá la red que crea:
+<pre>sudo apt install -y docker.io
+ip -br addr show docker0
+sudo docker network ls</pre>
+¿Qué red y qué máscara tiene <code>docker0</code>? ¿Qué papel cumple esa interfaz para los contenedores?</li>
+<li>Levantá un nginx con un puerto publicado y averiguá su IP:
+<pre>sudo docker run -d --name web -p 8080:80 nginx
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' web
+curl -s http://localhost:8080 | head -4</pre></li>
+<li>Desde tu computadora, abrí <code>http://192.168.56.101:8080</code>. Después mirá qué IP de origen registró el contenedor:
+<pre>sudo docker logs web | tail -3</pre>
+Compará con la IP que aparece cuando el pedido lo hace <code>curl</code> desde la propia VM.</li>
+<li>Encontrá la regla que creó Docker:
+<pre>sudo iptables -t nat -L DOCKER -n</pre>
+¿Es NAT de origen o de destino? ¿Qué puerto y qué IP figuran?</li>
+<li>Creá una red propia y probá el DNS interno:
+<pre>sudo docker network create red-app
+sudo docker run -d --name api --network red-app nginx
+sudo docker run --rm --network red-app alpine sh -c "cat /etc/resolv.conf; nslookup api; wget -qO- http://api | head -4"</pre>
+¿Qué servidor DNS usa el contenedor? Repetí el último comando sin <code>--network red-app</code>: ¿se resuelve <code>api</code>?</li>
+<li>Probá <code>localhost</code> desde un contenedor:
+<pre>sudo docker run --rm --network red-app alpine wget -qO- http://localhost</pre>
+¿Por qué falla, si nginx está corriendo en la VM?</li>
+<li>Limpieza:
+<pre>sudo docker rm -f web api
+sudo docker network rm red-app</pre></li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la regla del paso 4 explicada con el vocabulario de la sección 6, las dos IP de origen del paso 3 y las respuestas de los pasos 5 y 6.</div>
+</div>
+</section>
+
+
+
+<h2 id="ejercitacion">11. Ejercitación</h2>
+<ol>
+<li>Pasá a binario <code>172.31.200.7</code> y a decimal <code>11000000.10101000.01100100.11111110</code>.</li>
+<li>Para <code>10.20.130.77/18</code>, calculá máscara, red, broadcast, rango y cantidad de hosts.</li>
+<li>Para <code>192.168.5.100/29</code>, calculá red, broadcast y rango.</li>
+<li>Dividí <code>172.16.8.0/22</code> en 8 subredes iguales. Indicá el prefijo y las ocho redes.</li>
+<li>Con el bloque <code>10.0.0.0/24</code>, diseñá un VLSM para: Producción 100 hosts, Oficina 50, Depósito 20, Wi-Fi de invitados 10 y dos enlaces punto a punto entre routers.</li>
+<li>Un router tiene estas rutas: <code>10.0.0.0/8 → A</code>, <code>10.1.0.0/16 → B</code>, <code>10.1.2.0/24 → C</code>, <code>0.0.0.0/0 → D</code>. ¿Por dónde sale cada paquete hacia 10.1.2.3, 10.1.9.9, 10.200.0.1 y 172.16.0.1?</li>
+<li>Un host tiene <code>192.168.1.100/25</code> y puerta de enlace <code>192.168.1.129</code>. ¿Está bien? ¿Y un host con <code>192.168.1.63/26</code>?</li>
+</ol>
+
+
+
+<h2 id="logros">12. Micro-logros del módulo</h2>
+<ul class="logros" data-id="u9">
+<li>Paso de decimal a binario y viceversa sin calculadora.</li>
+<li>Calculo red, broadcast y rango para cualquier prefijo, incluso si el límite cae en el 2.º o 3.er octeto.</li>
+<li>Diseño un VLSM alineado, sin solapamientos y contando la puerta de enlace.</li>
+<li>Resuelvo los labs 1, 2 y 3 de OpenRedLab y explico cada falla con su código.</li>
+<li>Armo un router con namespaces en Linux y explico el error de cada paso.</li>
+<li>Explico por qué NAT hace innecesaria la ruta de vuelta en una red doméstica.</li>
+<li>Sigo una resolución DNS con <code>dig +trace</code> y nombro cada nivel.</li>
+<li>Explico la diferencia entre tránsito y peering.</li>
+<li>Explico qué hace <code>-p 8080:80</code> en Docker en términos de NAT y encuentro la regla que lo implementa.</li>
+</ul>
+
+<h2 id="autoevaluacion">13. Autoevaluación</h2>
+<p class="puntaje"></p>
+
+<div class="preg" data-ok="3"><p>¿Cuál es la dirección de red de 192.168.50.77/27?</p>
+<ol><li>192.168.50.0</li><li>192.168.50.32</li><li>192.168.50.64</li><li>192.168.50.77</li></ol>
+<p class="porque">Salto 32: 77 cae en el bloque de 64 (64 a 95).</p></div>
+
+<div class="preg" data-ok="2"><p>¿Qué prefijo necesita una subred de 50 PC más su puerta de enlace?</p>
+<ol><li>/27</li><li>/26</li><li>/25</li><li>/24</li></ol>
+<p class="porque">51 direcciones: /27 da 30 y no alcanza; /26 da 62. Elegir /25 o /24 desperdicia.</p></div>
+
+<div class="preg" data-ok="4"><p>Un router tiene rutas a 172.16.0.0/16 y a 172.16.4.0/22. ¿Por cuál envía un paquete a 172.16.6.9?</p>
+<ol><li>Por la /16, porque es más grande</li><li>Por la ruta por defecto</li><li>Lo descarta, porque hay dos coincidencias</li><li>Por la /22, porque es la más específica</li></ol>
+<p class="porque">172.16.4.0/22 abarca de 172.16.4.0 a 172.16.7.255, así que coincide. Gana el prefijo más largo.</p></div>
+
+<div class="preg" data-ok="1"><p>El ping de A a B se envía, B lo recibe, pero A no recibe respuesta. ¿Cuál es la causa más probable?</p>
+<ol><li>Falta la ruta de vuelta hacia la red de A</li><li>El cable de A está caído</li><li>A tiene mal la máscara</li><li>B no tiene MAC</li></ol>
+<p class="porque">Si B lo recibe, la ida funciona. Lo que falla es el camino de la respuesta: una ruta faltante en B o en un router intermedio (o un filtro).</p></div>
+
+<div class="preg" data-ok="3"><p>¿Qué hace NAT en un router hogareño?</p>
+<ol><li>Asigna las IP privadas</li><li>Resuelve los nombres</li><li>Reemplaza la IP privada de origen por la pública y lleva la respuesta de vuelta al equipo correcto</li><li>Cifra el tráfico hacia Internet</li></ol>
+<p class="porque">Las IP privadas las asigna DHCP y los nombres los resuelve DNS. NAT traduce direcciones (y puertos) y mantiene una tabla de traducciones.</p></div>
+
+<div class="preg" data-ok="2"><p>¿En qué orden ocurren los mensajes DHCP de un préstamo nuevo?</p>
+<ol><li>Request, Offer, Discover, Ack</li><li>Discover, Offer, Request, Ack</li><li>Offer, Discover, Ack, Request</li><li>Discover, Request, Offer, Ack</li></ol>
+<p class="porque">DORA: el cliente descubre, el servidor ofrece, el cliente pide y el servidor confirma.</p></div>
+
+<div class="preg" data-ok="4"><p>Un equipo tiene la IP 169.254.12.7. ¿Qué indica?</p>
+<ol><li>Que tiene IP pública</li><li>Que está detrás de CGNAT</li><li>Que está en una VLAN</li><li>Que no consiguió servidor DHCP y se asignó una dirección de enlace local</li></ol>
+<p class="porque">169.254.0.0/16 es el bloque de enlace local que se autoasigna un equipo cuando DHCP no responde.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Qué registro DNS indica el servidor de correo de un dominio?</p>
+<ol><li>MX</li><li>CNAME</li><li>PTR</li><li>NS</li></ol>
+<p class="porque">MX, con un número de preferencia. NS indica los servidores DNS autoritativos; PTR, la resolución inversa.</p></div>
+
+<div class="preg" data-ok="3"><p>En <code>docker run -p 8080:80 nginx</code>, ¿qué es 8080?</p>
+<ol><li>El puerto donde escucha nginx dentro del contenedor</li><li>La IP del contenedor</li><li>El puerto de la máquina anfitriona que se redirige al 80 del contenedor</li><li>El tamaño del contenedor</li></ol>
+<p class="porque">El formato es <code>puerto_del_host:puerto_del_contenedor</code>. Es una redirección de puertos (NAT de destino).</p></div>
+
+<div class="caja-nota ia"><span class="lbl">Con IA, pero verificando</span><p>Pedile a un asistente un diseño VLSM para la ejercitación 5. Verificalo vos: alineación, solapamientos y si contó la puerta de enlace. Después cargalo en OpenRedLab y usá <b>Verificar diseño</b> con los hosts de cada sector. Los asistentes suelen desalinear subredes o confundir hosts utilizables con direcciones totales. Registrá lo que encuentres.</p></div>
+
+<h2 id="profundizar">Para profundizar</h2>
+<ul>
+<li>Kurose y Ross (2017), caps. 4 y 5 (plano de datos y plano de control); Tanenbaum, Feamster y Wetherall (2023), cap. 5; y cap. 7 para DNS.</li>
+<li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Peterson y Davie</a>, cap. 3 (<i>Internetworking</i>: IP, subredes, ARP, DHCP, ICMP, enrutamiento) y cap. 4 (<i>Advanced Internetworking</i>: la Internet global, BGP, IPv6).</li>
+<li><a href="https://gaia.cs.umass.edu/kurose_ross/wireshark.php" target="_blank" rel="noopener">Wireshark Labs de Kurose y Ross</a>: <i>IP</i>, <i>ICMP</i>, <i>DHCP</i>, <i>NAT</i> y <i>DNS</i>.</li>
+</ul>
+<p>Peterson y Davie, Grigorik y los Wireshark Labs están en inglés y son de acceso libre.</p>
+
+
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Módulo 3 de 5</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-u9';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>

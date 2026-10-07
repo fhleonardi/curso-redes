@@ -1,0 +1,639 @@
+<title>Módulo 4: Transporte y aplicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Portada del curso</a><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a><a href="modulo-3.html">← Módulo 3</a><a href="modulo-5.html">Módulo 5 →</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Módulo 4 · Semanas 9 y 10 · 10 horas</p>
+      <h1>Capa de transporte y aplicación</h1>
+      <p class="bajada">Cómo llegan los datos al programa correcto, qué garantiza TCP y qué no garantiza UDP, cómo se ve una conexión desde el código, qué viaja realmente en HTTP y cómo leerlo en Wireshark.</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="on" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="on" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  <div><p class="objetivos-tit">Al terminar el módulo vas a poder</p><ul class="objetivos"><li>Explicar el rol de los puertos y de los sockets, e identificar una conexión por sus cuatro datos.</li><li>Comparar TCP y UDP y elegir el adecuado para una aplicación, con argumentos.</li><li>Describir el establecimiento en tres pasos, la confirmación, la retransmisión y el control de flujo de TCP.</li><li>Leer una solicitud y una respuesta HTTP: método, ruta, cabeceras y código de estado.</li><li>Programar un servidor y un cliente TCP mínimos y observar su tráfico.</li><li>Capturar, filtrar y seguir una conversación TCP con Wireshark.</li><li>Consumir y depurar una API REST desde el navegador, y resolver errores de CORS.</li></ul></div>
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones del módulo"><h2>En este módulo</h2><ol><li><a href="#transporte">1. Qué agrega la capa de transporte</a></li><li><a href="#udp">2. UDP</a></li><li><a href="#tcp">3. TCP</a></li><li><a href="#aplicacion">4. Protocolos de aplicación</a></li><li><a href="#programar">5. La red desde el código</a></li><li><a href="#wireshark">6. Análisis de tráfico con Wireshark</a></li><li class="lab"><a href="#lab-10a">Laboratorio 4A · Conexiones en OpenRedLab</a></li><li class="lab"><a href="#lab-10b">Laboratorio 4B · Sockets, servicios y capturas</a></li><li class="lab"><a href="#lab-10c">Laboratorio 4C · Una API, un frontend y CORS</a></li><li><a href="#desafio">7. Desafío: «la API no responde»</a></li><li><a href="#logros">8. Micro-logros del módulo</a></li><li><a href="#autoevaluacion">9. Autoevaluación</a></li><li><a href="#profundizar">Para profundizar</a></li></ol></nav>
+  <main class="texto">
+<h2 id="transporte">1. Qué agrega la capa de transporte</h2>
+
+<p>IP lleva paquetes de un host a otro. Pero en un host corren muchos programas a la vez: el navegador, el cliente de correo, un servidor web. La capa de transporte entrega cada dato al <b>proceso</b> correcto, y para eso usa <a class="g" href="glosario.html#puerto" target="_blank" rel="noopener" title="Glosario: Puerto">puertos</a>: números de 16 bits (0 a 65535) en la cabecera TCP o UDP.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Rango (RFC 6335)</th><th>Nombre</th><th>Quién lo usa</th></tr></thead>
+<tbody>
+<tr><td>0 – 1023</td><td>bien conocidos</td><td>servicios estándar (en Linux, abrirlos requiere privilegios)</td></tr>
+<tr><td>1024 – 49151</td><td>registrados</td><td>servicios registrados en IANA (MySQL 3306, PostgreSQL 5432)</td></tr>
+<tr><td>49152 – 65535</td><td>dinámicos o <a class="g" href="glosario.html#puerto-efimero" target="_blank" rel="noopener" title="Glosario: Puerto efímero">efímeros</a></td><td>el puerto de origen que el sistema le asigna a un cliente (Linux usa 32768–60999)</td></tr>
+</tbody>
+</table></div>
+
+<div class="tabla"><table>
+<thead><tr><th>Puerto</th><th>Servicio</th><th>Transporte</th></tr></thead>
+<tbody>
+<tr><td>20, 21</td><td>FTP (datos, control)</td><td>TCP</td></tr>
+<tr><td>22</td><td>SSH</td><td>TCP</td></tr>
+<tr><td>25</td><td>SMTP</td><td>TCP</td></tr>
+<tr><td>53</td><td>DNS</td><td>UDP (y TCP)</td></tr>
+<tr><td>67, 68</td><td>DHCP</td><td>UDP</td></tr>
+<tr><td>80, 443</td><td>HTTP, HTTPS</td><td>TCP (HTTP/3: UDP)</td></tr>
+</tbody>
+</table></div>
+
+<h3>Socket y conexión</h3>
+
+<p>Un <a class="g" href="glosario.html#socket" target="_blank" rel="noopener" title="Glosario: Socket">socket</a> es la interfaz que ofrece el sistema operativo para que un programa use la red. Una conexión TCP queda identificada por cuatro datos: <b>IP y puerto de origen, IP y puerto de destino</b>.</p>
+
+<pre>Cliente 192.168.1.20:53124  ───── TCP ─────►  Servidor 203.0.113.10:443
+        (puerto efímero)                              (puerto conocido)</pre>
+
+<p>Por eso un servidor web puede atender a miles de clientes en el mismo puerto 443: cada conexión se distingue por la IP y el puerto del cliente.</p>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p>El <b>puerto lógico</b> (un número en la cabecera TCP o UDP) no tiene nada que ver con el <b>puerto físico</b> de un switch, donde se enchufa el cable.</p></div>
+
+<h2 id="udp">2. UDP</h2>
+
+<p><a class="g" href="glosario.html#udp" target="_blank" rel="noopener" title="Glosario: UDP">UDP</a> agrega lo mínimo sobre IP: puertos, largo y una suma de verificación, en 8 bytes de cabecera. No abre conexión, no confirma, no reordena ni retransmite. Si un datagrama se pierde, UDP no hace nada.</p>
+
+<p>Se elige UDP cuando:</p>
+<ul>
+<li>importa más llegar a tiempo que llegar completo: voz, video en vivo, juegos;</li>
+<li>los mensajes son cortos y la aplicación puede reintentar: DNS, DHCP, NTP;</li>
+<li>se necesita broadcast o multicast, que TCP no admite;</li>
+<li>la aplicación prefiere implementar su propia confiabilidad: QUIC, el transporte de HTTP/3.</li>
+</ul>
+
+<h2 id="tcp">3. TCP</h2>
+
+<p><a class="g" href="glosario.html#tcp" target="_blank" rel="noopener" title="Glosario: TCP">TCP</a> ofrece un <b>flujo de bytes confiable, ordenado y bidireccional</b> entre dos procesos. Sus mecanismos:</p>
+
+<h3>Establecimiento en tres pasos</h3>
+<pre>Cliente                                Servidor (LISTEN)
+  │── SYN       seq=x ─────────────────►│
+  │◄─ SYN-ACK   seq=y  ack=x+1 ─────────│
+  │── ACK       ack=y+1 ───────────────►│
+          ESTABLISHED en ambos extremos</pre>
+<p>En el <a class="g" href="glosario.html#three-way-handshake" target="_blank" rel="noopener" title="Glosario: Establecimiento en tres pasos (three-way handshake)">establecimiento</a> cada extremo elige su número de secuencia inicial al azar, confirma el del otro y anuncia su <a class="g" href="glosario.html#mss" target="_blank" rel="noopener" title="Glosario: MSS (tamaño máximo de segmento)">MSS</a> y su ventana. Si nadie escucha en el puerto, el servidor responde <b>RST</b>, y el cliente informa «conexión rechazada». Si no responde nadie, el cliente reintenta el SYN y termina por agotar el tiempo.</p>
+
+<h3>Secuencia, confirmación y retransmisión</h3>
+<p>El <a class="g" href="glosario.html#numero-secuencia" target="_blank" rel="noopener" title="Glosario: Número de secuencia y ACK">número de secuencia</a> indica qué byte del flujo lleva cada segmento. El ACK indica el próximo byte que el receptor espera, y así confirma todo lo anterior. Si un segmento no se confirma a tiempo, o llegan tres ACK duplicados, TCP lo <a class="g" href="glosario.html#retransmision" target="_blank" rel="noopener" title="Glosario: Retransmisión">retransmite</a>.</p>
+
+<h3>Control de flujo y de congestión</h3>
+<ul>
+<li><a class="g" href="glosario.html#ventana-tcp" target="_blank" rel="noopener" title="Glosario: Ventana y control de flujo">Control de flujo</a>: el receptor anuncia cuántos bytes puede aceptar (ventana de recepción). Protege al <b>receptor</b>.</li>
+<li><a class="g" href="glosario.html#control-congestion" target="_blank" rel="noopener" title="Glosario: Control de congestión">Control de congestión</a>: el emisor ajusta su ritmo según las pérdidas que detecta. Protege a la <b>red</b>.</li>
+</ul>
+
+<h3>Cierre</h3>
+<p>Cada sentido se cierra por separado con FIN y ACK. El extremo que cierra primero queda un tiempo en <code>TIME_WAIT</code>, para absorber segmentos atrasados. Esos <a class="g" href="glosario.html#estados-tcp" target="_blank" rel="noopener" title="Glosario: Estados de una conexión TCP y RST">estados</a> se ven con <code>ss</code>.</p>
+
+<div class="tabla"><table>
+<thead><tr><th></th><th>TCP</th><th>UDP</th></tr></thead>
+<tbody>
+<tr><td>Conexión</td><td>sí (establecimiento en tres pasos)</td><td>no</td></tr>
+<tr><td>Entrega garantizada y ordenada</td><td>sí</td><td>no</td></tr>
+<tr><td>Control de flujo y de congestión</td><td>sí</td><td>no</td></tr>
+<tr><td>Cabecera</td><td>20 bytes o más</td><td>8 bytes</td></tr>
+<tr><td>Unidad</td><td>flujo de bytes (segmentos)</td><td>mensajes (datagramas)</td></tr>
+<tr><td>Ejemplos</td><td>HTTP/1.1 y HTTP/2, SSH, SMTP, bases de datos</td><td>DNS, DHCP, VoIP, juegos, QUIC</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="aplicacion">4. Protocolos de aplicación</h2>
+
+<p>En el <a class="g" href="glosario.html#cliente-servidor" target="_blank" rel="noopener" title="Glosario: Modelo cliente-servidor">modelo cliente-servidor</a>, el servidor espera en un puerto conocido y el cliente inicia la conversación. «Cliente» y «servidor» son roles de procesos, no tipos de máquina.</p>
+
+<h3>HTTP</h3>
+<p><a class="g" href="glosario.html#http" target="_blank" rel="noopener" title="Glosario: HTTP">HTTP</a> es texto estructurado (en HTTP/1.1) que viaja sobre TCP. Es <b>sin estado</b>: cada solicitud es independiente, y la sesión se mantiene con cookies o tokens.</p>
+<pre>GET /cursos/redes?modulo=4 HTTP/1.1          ← método, ruta, versión
+Host: www.ejemplo.com                          ← cabeceras
+User-Agent: curl/8.5.0
+Accept: */*
+                                               ← línea vacía: fin de cabeceras
+HTTP/1.1 200 OK                                ← versión, código, frase
+Content-Type: text/html; charset=utf-8
+Content-Length: 5120
+
+&lt;!doctype html&gt;…                             ← cuerpo</pre>
+
+<div class="tabla"><table>
+<thead><tr><th>Método</th><th>Uso</th></tr></thead>
+<tbody>
+<tr><td>GET</td><td>obtener un recurso (no debe cambiar nada en el servidor)</td></tr>
+<tr><td>POST</td><td>enviar datos para procesar o crear</td></tr>
+<tr><td>PUT / PATCH</td><td>reemplazar / modificar un recurso</td></tr>
+<tr><td>DELETE</td><td>borrar un recurso</td></tr>
+</tbody>
+</table></div>
+
+<p>Los <a class="g" href="glosario.html#codigos-http" target="_blank" rel="noopener" title="Glosario: Códigos de estado HTTP">códigos de estado</a> se leen por su primer dígito: <b>2xx</b> éxito, <b>3xx</b> redirección, <b>4xx</b> error del cliente (400, 401, 403, 404), <b>5xx</b> error del servidor (500, 502, 503). Para quien programa, un 4xx indica que hay que revisar la solicitud y un 5xx, el servidor.</p>
+
+<h3>APIs: REST, JSON y sesiones</h3>
+
+<p>Buena parte del HTTP que van a programar no devuelve páginas sino datos: es una <a class="g" href="glosario.html#api-rest" target="_blank" rel="noopener" title="Glosario: API REST">API REST</a>. Los recursos se nombran con URL, la acción se indica con el método y el resultado con el código de estado. Los datos viajan en <a class="g" href="glosario.html#json" target="_blank" rel="noopener" title="Glosario: JSON">JSON</a>.</p>
+
+<pre>POST /api/alumnos HTTP/1.1
+Host: api.ejemplo.com
+Content-Type: application/json
+
+{"nombre": "Ana", "legajo": 42}
+
+HTTP/1.1 201 Created
+Location: /api/alumnos/42
+Content-Type: application/json
+
+{"id": 42, "nombre": "Ana", "legajo": 42}</pre>
+
+<p>Como HTTP no tiene estado, la sesión se mantiene con una <a class="g" href="glosario.html#cookie" target="_blank" rel="noopener" title="Glosario: Cookie y sesión">cookie</a> (el servidor envía <code>Set-Cookie: sesion=…</code> y el navegador la devuelve en cada solicitud) o con un token en la cabecera <code>Authorization</code>.</p>
+
+<h3>Mismo origen y CORS</h3>
+
+<p>El navegador aplica la <a class="g" href="glosario.html#mismo-origen" target="_blank" rel="noopener" title="Glosario: Política del mismo origen">política del mismo origen</a>: el JavaScript de una página solo puede leer respuestas de su mismo origen, que es la combinación de esquema, host y puerto. Si el frontend corre en <code>http://localhost:5173</code> y la API en <code>http://localhost:8000</code>, son orígenes distintos, y el navegador bloquea la lectura salvo que la API lo autorice con <a class="g" href="glosario.html#cors" target="_blank" rel="noopener" title="Glosario: CORS (intercambio de recursos de origen cruzado)">CORS</a>:</p>
+
+<pre>Navegador → API   GET /api/estado   Origin: http://localhost:5173
+API → Navegador   200 OK            Access-Control-Allow-Origin: http://localhost:5173</pre>
+
+<p>Para solicitudes «no simples» (PUT, DELETE, o un POST con JSON), el navegador primero envía un <code>OPTIONS</code> de verificación previa, y solo si la respuesta lo autoriza envía la solicitud real.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Lo que más confunde</span><p>El error «bloqueado por CORS» aparece en el navegador, pero se corrige en el servidor. Y casi siempre el servidor <b>sí</b> recibió y respondió la solicitud: lo que bloquea es el navegador, al momento de entregarle la respuesta al script. Por eso con <code>curl</code> «anda»: curl no aplica CORS.</p></div>
+
+<h3>HTTPS, FTP y SSH</h3>
+<ul>
+<li><a class="g" href="glosario.html#https" target="_blank" rel="noopener" title="Glosario: HTTPS">HTTPS</a>: HTTP dentro de una sesión TLS, en el puerto 443. Lo vemos en el módulo 5.</li>
+<li><a class="g" href="glosario.html#ftp" target="_blank" rel="noopener" title="Glosario: FTP">FTP</a>: transferencia de archivos con dos conexiones (control en el 21 y una de datos aparte), <b>sin cifrar</b>. Hoy se prefiere SFTP, que corre sobre SSH.</li>
+<li><a class="g" href="glosario.html#ssh" target="_blank" rel="noopener" title="Glosario: SSH">SSH</a>: acceso remoto cifrado a la terminal, en el puerto 22.</li>
+</ul>
+
+<h2 id="programar">5. La red desde el código</h2>
+
+<p>Un servidor TCP mínimo en Python 3: espera una conexión en el puerto 5000 y devuelve en mayúsculas lo que recibe. Cada llamada corresponde a algo que ya vimos.</p>
+
+<pre><span class="c"># servidor.py</span>
+import socket
+
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:   <span class="c"># IPv4 + TCP</span>
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind(("0.0.0.0", 5000))      <span class="c"># todas las interfaces, puerto 5000</span>
+    s.listen()                     <span class="c"># estado LISTEN</span>
+    print("Escuchando en el puerto 5000")
+    conn, addr = s.accept()        <span class="c"># acá termina el handshake</span>
+    with conn:
+        print("Conexión desde", addr)              <span class="c"># (IP, puerto efímero) del cliente</span>
+        while datos := conn.recv(1024):            <span class="c"># recv devuelve b"" cuando el cliente cierra</span>
+            conn.sendall(datos.upper())</pre>
+
+<pre><span class="c"># cliente.py</span>
+import socket
+
+with socket.create_connection(("127.0.0.1", 5000)) as s:   <span class="c"># SYN, SYN-ACK, ACK</span>
+    s.sendall(b"hola red\n")
+    print(s.recv(1024).decode())</pre>
+
+<div class="caja-nota pensar"><span class="lbl">Para pensar</span><p>¿Qué cambia si en <code>bind</code> se pone <code>"127.0.0.1"</code> en lugar de <code>"0.0.0.0"</code>? Probalo: desde la misma VM funciona, y desde tu computadora no. Es una de las causas más comunes de «en mi máquina anda».</p></div>
+
+<h2 id="wireshark">6. Análisis de tráfico con Wireshark</h2>
+
+<p><a class="g" href="glosario.html#wireshark" target="_blank" rel="noopener" title="Glosario: Wireshark">Wireshark</a> captura lo que pasa por una interfaz y lo decodifica capa por capa. Hay dos clases de <a class="g" href="glosario.html#filtros-wireshark" target="_blank" rel="noopener" title="Glosario: Filtro de captura y filtro de visualización">filtros</a>, con sintaxis distintas:</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Objetivo</th><th>Filtro de captura (decide qué se guarda)</th><th>Filtro de visualización (oculta o muestra)</th></tr></thead>
+<tbody>
+<tr><td>Un host</td><td><code>host 192.168.56.101</code></td><td><code>ip.addr == 192.168.56.101</code></td></tr>
+<tr><td>Web sin cifrar</td><td><code>tcp port 80</code></td><td><code>http</code></td></tr>
+<tr><td>DNS</td><td><code>udp port 53</code></td><td><code>dns</code></td></tr>
+<tr><td>Inicios de conexión</td><td><code>tcp[tcpflags] &amp; tcp-syn != 0</code></td><td><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></td></tr>
+<tr><td>Problemas de TCP</td><td>—</td><td><code>tcp.analysis.flags</code></td></tr>
+</tbody>
+</table></div>
+
+<p>Funciones que conviene dominar: <b>Analizar → Seguir → Flujo TCP</b> (reconstruye la conversación completa de la aplicación), <b>Estadísticas → Conversaciones</b>, y la columna de números de secuencia relativos.</p>
+
+<div class="caja-nota ojo"><span class="lbl">Ética</span><p>Capturá solo tu tráfico o el de un laboratorio autorizado. Capturar tráfico ajeno sin permiso es una falta grave y puede ser delito. Es la frontera entre diagnóstico y ataque que vamos a retomar en el módulo 5.</p></div>
+
+<section class="lab" id="lab-10a">
+<header><h3>Laboratorio 4A · Conexiones en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>Abrí <i>Oficina con DNS propio</i>. En <b>Simulación → Conectar</b>, conectate por HTTP (TCP 80) desde una PC a <code>www.oficina.local</code>. Identificá el socket del cliente y el del servidor, el establecimiento, el pedido, la respuesta y el cierre.</li>
+<li>Conectate por SSH (TCP 22) al mismo servidor. Anotá el diagnóstico (<b>D31</b>): ¿es un problema de red o de servicio?</li>
+<li>Conectate a una IP pública donde no haya ningún servidor. Anotá el diagnóstico (<b>D33</b>) y explicá la diferencia entre «nadie contesta» y «contesta que no».</li>
+<li>En la pestaña <b>Captura</b>, iniciá una captura en el cable de la PC y repetí la conexión HTTP. Con el filtro <code>tcp.port==80</code>, contá cuántos segmentos lleva la conexión completa. ¿Qué apareció antes del primer SYN y por qué?</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la captura del paso 4 y las respuestas de los pasos 2, 3 y 4.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-10b">
+<header><h3>Laboratorio 4B · Sockets, servicios y capturas</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM) + Wireshark</span><span>2 encuentros</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li><b>Quién escucha.</b> Listá los sockets en escucha y las conexiones establecidas:
+<pre>sudo ss -tlnp        <span class="c"># TCP en escucha, con el proceso</span>
+sudo ss -ulnp        <span class="c"># UDP</span>
+ss -tan              <span class="c"># todas las conexiones TCP con su estado</span></pre>
+¿Qué servicio escucha en el 22? ¿Y en <code>127.0.0.53:53</code>?</li>
+<li><b>Un servidor con netcat.</b> En una terminal, <code>nc -l 5000</code>. En otra, <code>nc 127.0.0.1 5000</code>, y escribí unas líneas. En una tercera, <code>ss -tan | grep 5000</code>. Cerrá con <kbd>Ctrl</kbd>+<kbd>C</kbd> y volvé a mirar: ¿en qué estado quedó la conexión?</li>
+<li><b>Tu propio servidor.</b> Creá <code>servidor.py</code> y <code>cliente.py</code> con el código de la sección 5. Corré el servidor y capturá mientras el cliente se conecta:
+<pre>sudo tcpdump -ni lo -w socket.pcap port 5000 &amp;
+python3 cliente.py
+sudo pkill tcpdump</pre>
+Abrí <code>socket.pcap</code> en Wireshark: identificá los tres segmentos del establecimiento, el dato enviado, la respuesta y el cierre. Usá <b>Seguir → Flujo TCP</b>.</li>
+<li><b>El bind.</b> Cambiá el servidor a <code>bind(("127.0.0.1", 5000))</code> y tratá de conectarte desde tu computadora con <code>Test-NetConnection 192.168.56.101 -Port 5000</code> en PowerShell. Volvé a <code>0.0.0.0</code> y repetí. Mirá la columna <i>Local Address</i> de <code>ss -tlnp</code> en los dos casos.</li>
+<li><b>Un servidor web real.</b> Instalá nginx y probá códigos de estado:
+<pre>sudo apt install -y nginx
+curl -v http://localhost/            <span class="c"># 200</span>
+curl -v http://localhost/no-existe   <span class="c"># 404</span>
+curl -I http://localhost/            <span class="c"># solo cabeceras (método HEAD)</span></pre>
+En la salida de <code>curl -v</code>, las líneas con <code>&gt;</code> son la solicitud y las que tienen <code>&lt;</code>, la respuesta.</li>
+<li><b>Captura HTTP desde tu navegador.</b> En tu computadora, iniciá Wireshark sobre el adaptador <i>VirtualBox Host-Only</i> y abrí <code>http://192.168.56.101/</code> en el navegador. Filtrá con <code>http</code> y seguí el flujo TCP: ¿qué cabeceras envía tu navegador que <code>curl</code> no envía? ¿Cuántas conexiones TCP abrió el navegador?</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> <code>socket.pcap</code> con los segmentos del establecimiento y del cierre marcados, la explicación del paso 4 y la respuesta del paso 6.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-10c">
+<header><h3>Laboratorio 4C · Una API, un frontend y CORS</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM) + navegador</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Una API mínima con la biblioteca estándar de Python. Guardala como <code>api.py</code>:</p>
+<pre>import json
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+PERMITIR = None   # después probá con "http://192.168.56.101:8080"
+
+class API(BaseHTTPRequestHandler):
+    def cors(self):
+        if PERMITIR:
+            self.send_header("Access-Control-Allow-Origin", PERMITIR)
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
+    def responder(self, codigo, datos):
+        cuerpo = json.dumps(datos).encode()
+        self.send_response(codigo)
+        self.send_header("Content-Type", "application/json")
+        self.cors()
+        self.end_headers()
+        self.wfile.write(cuerpo)
+
+    def do_OPTIONS(self):                     # verificación previa
+        self.send_response(204)
+        self.cors()
+        self.end_headers()
+
+    def do_GET(self):
+        self.responder(200, {"estado": "ok", "origen": self.headers.get("Origin")})
+
+    def do_POST(self):
+        largo = int(self.headers.get("Content-Length", 0))
+        datos = json.loads(self.rfile.read(largo) or b"{}")
+        self.responder(201, {"recibido": datos})
+
+HTTPServer(("0.0.0.0", 8000), API).serve_forever()</pre>
+<p>Y un frontend mínimo, en <code>~/front/index.html</code>:</p>
+<pre>&lt;button onclick="pedir()"&gt;GET&lt;/button&gt;
+&lt;button onclick="enviar()"&gt;POST JSON&lt;/button&gt;
+&lt;pre id="salida"&gt;&lt;/pre&gt;
+&lt;script&gt;
+const API = "http://192.168.56.101:8000/";
+const mostrar = (t) =&gt; document.getElementById("salida").textContent = t;
+function pedir() {
+  fetch(API).then(r =&gt; r.json()).then(j =&gt; mostrar(JSON.stringify(j))).catch(e =&gt; mostrar("Error: " + e));
+}
+function enviar() {
+  fetch(API, { method: "POST", headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({ nombre: "Ana" }) })
+    .then(r =&gt; r.json()).then(j =&gt; mostrar(JSON.stringify(j))).catch(e =&gt; mostrar("Error: " + e));
+}
+&lt;/script&gt;</pre>
+<ol class="pasos">
+<li>Corré la API con <code>python3 api.py</code> y probala con <code>curl -i http://localhost:8000/</code>. ¿Hay alguna cabecera <code>Access-Control-…</code>?</li>
+<li>En otra terminal, serví el frontend en otro puerto: <code>python3 -m http.server 8080 --directory ~/front</code>.</li>
+<li>Desde tu computadora abrí <code>http://192.168.56.101:8080</code>, abrí las herramientas del navegador (<kbd>F12</kbd>) y apretá <b>GET</b>. Leé el error de la consola. Después mirá la terminal de la API: ¿llegó el pedido? ¿Qué código respondió?</li>
+<li>Apretá <b>POST JSON</b>. En la terminal de la API, ¿qué método llegó? ¿Llegó el POST?</li>
+<li>Poné <code>PERMITIR = "http://192.168.56.101:8080"</code>, reiniciá la API y repetí los dos botones. En la pestaña <b>Red</b> de las herramientas del navegador, buscá la cabecera <code>Origin</code> de la solicitud, la <code>Access-Control-Allow-Origin</code> de la respuesta y el <code>OPTIONS</code> previo al POST.</li>
+<li>Explicá por qué no conviene responder <code>Access-Control-Allow-Origin: *</code> en una API que usa cookies de sesión.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> el error del paso 3 con lo que mostró la terminal de la API, la respuesta del paso 4, una captura de la pestaña Red del paso 5 y la respuesta del paso 6.</div>
+</div>
+</section>
+
+
+
+<h2 id="desafio">7. Desafío: «la API no responde»</h2>
+
+<p>Un compañero desplegó una API en la VM y te pasa este mensaje: «Desde el servidor, <code>curl http://localhost:8000/estado</code> devuelve 200. Desde mi computadora, el navegador dice <i>No se puede acceder a este sitio</i>».</p>
+<p>Escribí un procedimiento de diagnóstico de abajo hacia arriba. Para cada paso, indicá el comando, qué esperás ver y qué concluís si no lo ves. Pista: hay al menos cuatro causas posibles en capas distintas. Reproducí al menos dos con tu servidor de Python.</p>
+
+
+
+<h2 id="logros">8. Micro-logros del módulo</h2>
+<ul class="logros" data-id="u10">
+<li>Identifico una conexión TCP por sus cuatro datos y explico qué es un puerto efímero.</li>
+<li>Elijo TCP o UDP para una aplicación y lo justifico.</li>
+<li>Señalo en una captura el establecimiento en tres pasos, los ACK y el cierre.</li>
+<li>Leo una solicitud y una respuesta HTTP e interpreto el código de estado.</li>
+<li>Programo un servidor TCP mínimo y explico qué hace cada llamada.</li>
+<li>Distingo «conexión rechazada» de «tiempo agotado» y sé qué indica cada una.</li>
+<li>Uso filtros de visualización y Seguir → Flujo TCP en Wireshark.</li>
+<li>Explico un error de CORS: quién lo produce, por qué el servidor recibió la solicitud y dónde se corrige.</li>
+</ul>
+
+<h2 id="autoevaluacion">9. Autoevaluación</h2>
+<p class="puntaje"></p>
+
+<div class="preg" data-ok="2"><p>Un servidor web atiende a 500 clientes a la vez en el puerto 443. ¿Cómo distingue cada conexión?</p>
+<ol><li>Por la MAC de cada cliente</li><li>Por la IP y el puerto de origen de cada cliente</li><li>Abre un puerto distinto para cada uno</li><li>No puede: atiende de a uno</li></ol>
+<p class="porque">La conexión es la cuaterna IP y puerto de origen, IP y puerto de destino. Con el destino fijo, el origen diferencia cada conexión.</p></div>
+
+<div class="preg" data-ok="3"><p>¿Qué responde un servidor a un SYN dirigido a un puerto donde nada escucha?</p>
+<ol><li>SYN-ACK</li><li>Nada</li><li>RST</li><li>FIN</li></ol>
+<p class="porque">Responde RST, y el cliente informa «conexión rechazada». «Nada» es típico de un firewall que descarta el paquete: el cliente agota el tiempo.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Por qué DNS usa UDP para la mayoría de las consultas?</p>
+<ol><li>Las consultas son cortas y, si se pierde una, alcanza con repetirla</li><li>Porque UDP es más seguro</li><li>Porque TCP no permite el puerto 53</li><li>Porque UDP cifra los datos</li></ol>
+<p class="porque">Abrir una conexión TCP para una pregunta de pocos bytes triplicaría la demora. DNS usa TCP cuando la respuesta es grande o para transferir zonas.</p></div>
+
+<div class="preg" data-ok="4"><p>El control de flujo de TCP sirve para…</p>
+<ol><li>evitar congestionar los routers</li><li>cifrar el flujo</li><li>elegir la ruta</li><li>no desbordar el búfer del receptor</li></ol>
+<p class="porque">El receptor anuncia su ventana. Lo que protege a la red es el control de congestión.</p></div>
+
+<div class="preg" data-ok="2"><p>Una API responde 503. ¿Dónde empezás a buscar?</p>
+<ol><li>En la solicitud del cliente</li><li>En el servidor: no está disponible o el servicio de atrás no responde</li><li>En el DNS</li><li>En el cable</li></ol>
+<p class="porque">5xx es error del lado del servidor; 503 significa servicio no disponible (sobrecarga, mantenimiento, backend caído). Si hubo respuesta HTTP, la red y el DNS funcionaron.</p></div>
+
+<div class="preg" data-ok="3"><p>¿Cuál es un filtro de <b>visualización</b> válido en Wireshark?</p>
+<ol><li><code>tcp port 80</code></li><li><code>host 10.0.0.1</code></li><li><code>tcp.port == 80</code></li><li><code>port 80 and tcp</code></li></ol>
+<p class="porque">Las otras tres están en sintaxis BPF, que es la de los filtros de captura.</p></div>
+
+<div class="preg" data-ok="1"><p>Un servidor hace <code>bind(("127.0.0.1", 8000))</code>. ¿Qué pasa?</p>
+<ol><li>Solo acepta conexiones desde la misma máquina</li><li>Acepta conexiones desde cualquier red</li><li>No puede arrancar</li><li>Solo acepta conexiones por UDP</li></ol>
+<p class="porque">127.0.0.1 es la interfaz de loopback. Para aceptar conexiones de otras máquinas hay que escuchar en <code>0.0.0.0</code> o en la IP de la interfaz.</p></div>
+
+<div class="preg" data-ok="1"><p>Tu frontend en <code>localhost:5173</code> no puede leer la respuesta de tu API en <code>localhost:8000</code>, pero con <code>curl</code> funciona. ¿Qué pasa?</p>
+<ol><li>Son orígenes distintos y la API no envía <code>Access-Control-Allow-Origin</code>; se corrige en la API</li><li>La API está caída</li><li>Hay un firewall que bloquea el navegador</li><li>El frontend tiene que usar HTTPS</li></ol>
+<p class="porque">El puerto forma parte del origen. curl no aplica la política del mismo origen; el navegador sí, y la API tiene que autorizar ese origen con CORS.</p></div>
+
+<div class="caja-nota ia"><span class="lbl">Con IA, pero verificando</span><p>Pedile a un asistente que extienda <code>servidor.py</code> para atender varios clientes a la vez. Antes de usarlo, leé el código y explicá con tus palabras qué hace cada línea nueva. Probalo con dos clientes simultáneos y con <code>ss -tan</code>. Registrá qué tuviste que corregir.</p></div>
+
+<h2 id="profundizar">Para profundizar</h2>
+<ul>
+<li>Kurose y Ross (2017), caps. 2 y 3; Tanenbaum, Feamster y Wetherall (2023), caps. 6 y 7.</li>
+<li><a href="https://hpbn.co/" target="_blank" rel="noopener">Grigorik, <i>High Performance Browser Networking</i></a>: caps. 1 a 3 (latencia, TCP y UDP) y 9 a 12 (HTTP/1.x y HTTP/2). Escrito para desarrolladores: explica por qué una página tarda lo que tarda.</li>
+<li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Peterson y Davie</a>, cap. 5 (<i>End-to-End Protocols</i>: UDP y TCP) y cap. 9 (<i>Applications</i>: HTTP y DNS).</li>
+<li><a href="https://gaia.cs.umass.edu/kurose_ross/wireshark.php" target="_blank" rel="noopener">Wireshark Labs de Kurose y Ross</a>: <i>HTTP</i>, <i>TCP</i> y <i>UDP</i>.</li>
+</ul>
+<p>Peterson y Davie, Grigorik y los Wireshark Labs están en inglés y son de acceso libre.</p>
+
+
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Módulo 4 de 5</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-u10';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>

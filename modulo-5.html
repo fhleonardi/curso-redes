@@ -1,0 +1,612 @@
+<title>Módulo 5: Seguridad en redes y QoS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="index.html">← Portada del curso</a><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a><a href="modulo-4.html">← Módulo 4</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Módulo 5 · Semanas 11 y 12 · 10 horas</p>
+      <h1>Seguridad en redes, codificación segura y calidad de servicio</h1>
+      <p class="bajada">Qué amenazas enfrenta una red, cómo se filtra el tráfico, qué protege la criptografía y qué no, cómo se escribe código que no abre la puerta a un atacante, y cómo se mide y se prioriza la calidad de una red.</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="on" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="on" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="on" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="on" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  <div><p class="objetivos-tit">Al terminar el módulo vas a poder</p><ul class="objetivos"><li>Clasificar amenazas comunes (sniffing, spoofing, DoS, intermediario) según la propiedad que atacan y proponer defensas.</li><li>Diseñar y aplicar una política de firewall de mínimo privilegio con UFW, y distinguir un filtrado con estado de uno sin estado.</li><li>Explicar cifrado simétrico, asimétrico, hash, firma y certificados, y cómo los combina TLS.</li><li>Encontrar y corregir inyección de SQL y XSS en código propio.</li><li>Medir latencia, jitter y pérdida, y explicar cómo se prioriza el tráfico.</li><li>Trasladar un diseño de subredes y firewall a una red en la nube (VPC, grupos de seguridad).</li></ul></div>
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones del módulo"><h2>En este módulo</h2><ol><li><a href="#amenazas">1. Qué se protege y de qué</a></li><li><a href="#firewall">2. Firewalls</a></li><li><a href="#cripto">3. Criptografía aplicada</a></li><li><a href="#codigo">4. Codificación segura</a></li><li><a href="#qos">5. Calidad de servicio</a></li><li class="lab"><a href="#lab-11a">Laboratorio 5A · Filtrado y calidad en OpenRedLab</a></li><li class="lab"><a href="#lab-11b">Laboratorio 5B · Firewall y TLS en tu servidor</a></li><li class="lab"><a href="#lab-11c">Laboratorio 5C · Romper y arreglar una consulta SQL</a></li><li class="lab"><a href="#lab-11d">Laboratorio 5D · Medir y degradar la calidad en Linux</a></li><li class="lab"><a href="#lab-11e">Laboratorio 5E · Diseñar una VPC</a></li><li><a href="#desafio">6. Desafío: la política de la PyME</a></li><li><a href="#logros">7. Micro-logros del módulo</a></li><li><a href="#autoevaluacion">8. Autoevaluación</a></li><li><a href="#profundizar">Para profundizar</a></li></ol></nav>
+  <main class="texto">
+<h2 id="amenazas">1. Qué se protege y de qué</h2>
+
+<p>La seguridad busca preservar tres propiedades (la <a class="g" href="glosario.html#cia" target="_blank" rel="noopener" title="Glosario: Confidencialidad, integridad y disponibilidad">tríada CID</a>):</p>
+<ul>
+<li><b>Confidencialidad</b>: solo acceden quienes están autorizados.</li>
+<li><b>Integridad</b>: nadie altera los datos sin que se note.</li>
+<li><b>Disponibilidad</b>: el servicio responde cuando se lo necesita.</li>
+</ul>
+<p>Se agregan la <b>autenticación</b> (saber con quién hablamos) y el <b>no repudio</b>. Una <b>vulnerabilidad</b> es una debilidad; una <b>amenaza</b> es quien o lo que puede aprovecharla; el <b>riesgo</b> combina la probabilidad de que ocurra con el daño que causaría.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Amenaza</th><th>En qué consiste</th><th>Ataca</th><th>Defensa principal</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#sniffing" target="_blank" rel="noopener" title="Glosario: Sniffing (captura de tráfico)">Sniffing</a></td><td>leer el tráfico que pasa</td><td>confidencialidad</td><td>cifrar extremo a extremo (TLS, SSH)</td></tr>
+<tr><td><a class="g" href="glosario.html#spoofing" target="_blank" rel="noopener" title="Glosario: Spoofing (suplantación)">Spoofing</a></td><td>falsificar una identidad: IP, MAC, ARP, DNS</td><td>autenticación</td><td>autenticación criptográfica; inspección de ARP; filtrado de origen</td></tr>
+<tr><td><a class="g" href="glosario.html#mitm" target="_blank" rel="noopener" title="Glosario: Ataque de intermediario (MITM)">Intermediario (MITM)</a></td><td>interponerse en la comunicación, leer y alterar</td><td>confidencialidad e integridad</td><td>verificar certificados y huellas</td></tr>
+<tr><td><a class="g" href="glosario.html#dos" target="_blank" rel="noopener" title="Glosario: DoS y DDoS (denegación de servicio)">DoS / DDoS</a></td><td>agotar recursos: ancho de banda, conexiones, CPU</td><td>disponibilidad</td><td>limitar tasas, filtrar en el proveedor, redundancia</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ejemplo"><span class="lbl">Cómo se encadenan</span><p>En una red Wi-Fi pública (sin <a class="g" href="glosario.html#seguridad-wifi" target="_blank" rel="noopener" title="Glosario: Seguridad Wi-Fi (WPA2, WPA3, 802.1X)">WPA2 o WPA3</a>, o con la clave escrita en la pared), un atacante envía respuestas <a class="g" href="glosario.html#arp" target="_blank" rel="noopener" title="Glosario: ARP (protocolo de resolución de direcciones)">ARP</a> falsas: le dice a todos que la MAC de la puerta de enlace es la suya (spoofing). Desde ese momento, el tráfico pasa por su equipo (intermediario), y todo lo que no esté cifrado lo puede leer (sniffing). TLS no evita el desvío, pero sí que el atacante entienda o altere lo que pasa, siempre que el usuario no acepte un certificado inválido.</p></div>
+
+<h2 id="firewall">2. Firewalls</h2>
+
+<p>Un <a class="g" href="glosario.html#firewall" target="_blank" rel="noopener" title="Glosario: Firewall (cortafuegos)">firewall</a> aplica una <b>política</b>: un conjunto ordenado de reglas que permiten o bloquean tráfico según origen, destino, protocolo, puerto, sentido y estado de la conexión.</p>
+
+<ul>
+<li><b>Sin estado</b>: evalúa cada paquete por separado. Para que vuelva la respuesta, hay que permitirla con otra regla.</li>
+<li><b>Con estado</b> (<i>stateful</i>): recuerda las conexiones, y deja pasar sola la respuesta de lo que se inició desde adentro.</li>
+<li><b>De aplicación</b>: entiende el protocolo (por ejemplo, HTTP) y puede bloquear solicitudes maliciosas.</li>
+</ul>
+
+<p><b>Principio de mínimo privilegio</b>: política por defecto <i>denegar lo entrante</i> y abrir solo lo necesario. Es el mismo principio que se aplica a usuarios y permisos en un sistema operativo.</p>
+
+<h3>UFW en Ubuntu</h3>
+<p>En Linux el filtrado lo hace netfilter, en el núcleo. <a class="g" href="glosario.html#ufw" target="_blank" rel="noopener" title="Glosario: UFW e iptables / nftables">UFW</a> es una interfaz simple para definir sus reglas:</p>
+<pre>sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp                       <span class="c"># ¡antes de habilitar, si estás por SSH!</span>
+sudo ufw allow 80,443/tcp
+sudo ufw allow from 192.168.56.0/24 to any port 5432 proto tcp
+sudo ufw enable
+sudo ufw status numbered</pre>
+
+<h3>Firewalls en la nube</h3>
+
+<p>En la nube los conceptos son los mismos, con otros nombres. Una <a class="g" href="glosario.html#vpc" target="_blank" rel="noopener" title="Glosario: VPC (nube privada virtual)">VPC</a> es tu red privada dentro del proveedor: un bloque CIDR que dividís en subredes. Una subred es <b>pública</b> si su tabla de rutas tiene una ruta por defecto hacia la puerta de enlace de Internet, y <b>privada</b> si no la tiene. Los <a class="g" href="glosario.html#grupo-seguridad" target="_blank" rel="noopener" title="Glosario: Grupo de seguridad y ACL de red">grupos de seguridad</a> son firewalls con estado que se aplican a cada máquina y solo admiten reglas de permitir.</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Concepto del curso</th><th>AWS</th><th>Azure</th></tr></thead>
+<tbody>
+<tr><td>Red privada con su bloque CIDR</td><td>VPC</td><td>VNet</td></tr>
+<tr><td>Ruta por defecto hacia Internet</td><td>Internet Gateway</td><td>ruta de sistema hacia Internet</td></tr>
+<tr><td>NAT de salida para subredes privadas</td><td>NAT Gateway</td><td>NAT Gateway</td></tr>
+<tr><td>Firewall con estado por máquina</td><td>Security Group</td><td>Network Security Group</td></tr>
+<tr><td>Filtro sin estado por subred</td><td>Network ACL</td><td>—</td></tr>
+</tbody>
+</table></div>
+
+<div class="caja-nota ojo"><span class="lbl">Docker y UFW</span><p>Docker agrega sus propias reglas de filtrado antes que las de UFW. Un puerto publicado con <code>-p 5432:5432</code> queda abierto a toda la red aunque UFW diga <i>deny incoming</i>. Si un contenedor solo tiene que ser accesible desde la propia máquina, hay que publicarlo como <code>-p 127.0.0.1:5432:5432</code> (ver <a class="g" href="glosario.html#red-docker" target="_blank" rel="noopener" title="Glosario: Redes en Docker">Redes en Docker</a>).</p></div>
+
+<div class="caja-nota ojo"><span class="lbl">No confundir</span><p>Un firewall no reemplaza mantener actualizado el software. Si el 443 está abierto, una vulnerabilidad de la aplicación web sigue expuesta. Y <a class="g" href="glosario.html#nat" target="_blank" rel="noopener" title="Glosario: NAT (traducción de direcciones de red)">NAT</a> no es un firewall, aunque impida conexiones entrantes como efecto secundario.</p></div>
+
+<h2 id="cripto">3. Criptografía aplicada</h2>
+
+<div class="tabla"><table>
+<thead><tr><th>Herramienta</th><th>Qué garantiza</th><th>Ejemplo vigente</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#cifrado-simetrico" target="_blank" rel="noopener" title="Glosario: Cifrado simétrico (AES)">Cifrado simétrico</a></td><td>confidencialidad; la misma clave cifra y descifra</td><td>AES-256-GCM, ChaCha20-Poly1305</td></tr>
+<tr><td><a class="g" href="glosario.html#cifrado-asimetrico" target="_blank" rel="noopener" title="Glosario: Cifrado asimétrico o de clave pública (RSA)">Cifrado asimétrico</a></td><td>par de claves pública y privada: acordar claves, autenticar</td><td>RSA de 2048 bits o más, curvas elípticas (Ed25519, ECDHE)</td></tr>
+<tr><td><a class="g" href="glosario.html#funcion-hash" target="_blank" rel="noopener" title="Glosario: Función hash criptográfica">Hash</a></td><td>integridad: resumen de tamaño fijo, de un solo sentido</td><td>SHA-256 (MD5 y SHA-1 están rotos)</td></tr>
+<tr><td><a class="g" href="glosario.html#firma-digital" target="_blank" rel="noopener" title="Glosario: Firma digital">Firma digital</a></td><td>autenticidad, integridad y no repudio</td><td>hash firmado con la clave privada</td></tr>
+<tr><td><a class="g" href="glosario.html#certificado-digital" target="_blank" rel="noopener" title="Glosario: Certificado digital (X.509)">Certificado</a></td><td>que una clave pública es de quien dice ser</td><td>X.509 firmado por una autoridad de certificación</td></tr>
+</tbody>
+</table></div>
+
+<p>El simétrico es rápido pero tiene un problema: cómo compartir la clave. El asimétrico lo resuelve pero es lento. Por eso los protocolos reales son <b>híbridos</b>, como <a class="g" href="glosario.html#tls" target="_blank" rel="noopener" title="Glosario: TLS (y su antecesor SSL)">TLS</a>:</p>
+
+<pre>Cliente                                           Servidor
+  │── «hola», versiones y algoritmos, parte del acuerdo de claves ──►│
+  │◄── elección, su parte del acuerdo, CERTIFICADO, firma ───────────│
+  │  verifica el certificado: nombre, vigencia, cadena hasta una CA raíz │
+  │  ambos derivan las mismas claves de sesión (ECDHE)                   │
+  │◄════════ datos cifrados con AES-GCM (simétrico) ════════════════►│</pre>
+
+<p>La versión vigente es TLS 1.3. SSL y TLS 1.0/1.1 están dados de baja. Se sigue diciendo «certificado SSL» por costumbre.</p>
+
+<div class="caja-nota ojo"><span class="lbl">El candado</span><p>El candado de <a class="g" href="glosario.html#https" target="_blank" rel="noopener" title="Glosario: HTTPS">HTTPS</a> indica que la conexión está cifrada y que el certificado corresponde a ese nombre. <b>No</b> dice que el sitio sea confiable: un sitio de phishing puede tener un certificado perfectamente válido.</p></div>
+
+<h2 id="codigo">4. Codificación segura</h2>
+
+<p>La red puede estar perfectamente filtrada y cifrada, y aun así un error en el código le entrega los datos al atacante. Las dos vulnerabilidades más clásicas tienen la misma raíz: <b>datos del usuario que terminan interpretados como código</b>.</p>
+
+<h3>Inyección de SQL</h3>
+<pre><span class="c"># VULNERABLE: el dato se pega dentro de la consulta</span>
+sql = "SELECT * FROM usuarios WHERE nombre = '" + nombre + "' AND clave = '" + clave + "'"
+<span class="c"># con nombre = admin' --   la consulta queda:</span>
+<span class="c"># SELECT * FROM usuarios WHERE nombre = 'admin' --' AND clave = '...'</span>
+<span class="c">#                                              └── el resto es un comentario</span></pre>
+<p>La defensa es usar <a class="g" href="glosario.html#consultas-preparadas" target="_blank" rel="noopener" title="Glosario: Consultas preparadas (parametrizadas)">consultas parametrizadas</a>: la consulta va con marcadores y los datos, aparte. El motor nunca interpreta los datos como SQL.</p>
+<pre>cur.execute("SELECT * FROM usuarios WHERE nombre = ? AND clave = ?", (nombre, clave))</pre>
+
+<h3>Cross-Site Scripting (XSS)</h3>
+<p>En el <a class="g" href="glosario.html#xss" target="_blank" rel="noopener" title="Glosario: Cross-Site Scripting (XSS)">XSS</a>, la página muestra un dato del usuario sin codificarlo, y el navegador de la víctima ejecuta un script inyectado:</p>
+<pre>// VULNERABLE
+comentario.innerHTML = textoDelUsuario;    // "&lt;img src=x onerror=alert(document.cookie)&gt;"
+// CORRECTO: se muestra como texto, no se interpreta
+comentario.textContent = textoDelUsuario;</pre>
+
+<p>Prácticas que previenen ambas (OWASP):</p>
+<ul>
+<li><a class="g" href="glosario.html#validacion-entradas" target="_blank" rel="noopener" title="Glosario: Validación de entradas y codificación de salida">Validar</a> en el servidor tipo, formato, largo y rango, preferentemente con listas de valores permitidos. La validación en el navegador es comodidad, no seguridad.</li>
+<li><b>Codificar la salida</b> según el contexto (HTML, atributo, URL, JavaScript), con plantillas que escapen por defecto.</li>
+<li>Usar <b>consultas parametrizadas</b> siempre.</li>
+<li><b>Mínimo privilegio</b> también en la base de datos: la cuenta de la aplicación no necesita poder borrar tablas.</li>
+<li>Cookies de sesión con <code>HttpOnly</code> y <code>Secure</code>, y una Política de Seguridad de Contenido (CSP).</li>
+</ul>
+
+<h3>Contraseñas y control de acceso</h3>
+<p><a class="g" href="glosario.html#autenticacion" target="_blank" rel="noopener" title="Glosario: Autenticación, autorización y control de acceso">Autenticar</a> es verificar quién sos; autorizar es decidir qué podés hacer. Para <a class="g" href="glosario.html#contrasena" target="_blank" rel="noopener" title="Glosario: Contraseña (buenas prácticas)">contraseñas</a>, las recomendaciones actuales (NIST SP 800-63B) priorizan la <b>longitud</b>, el chequeo contra listas de contraseñas filtradas y un segundo factor, y desaconsejan obligar a cambiarlas periódicamente sin motivo. Del lado de quien programa: nunca guardarlas en texto plano ni con un hash rápido. Hay que usar bcrypt, scrypt o Argon2, con sal.</p>
+
+<h2 id="qos">5. Calidad de servicio</h2>
+
+<p>No todo el tráfico necesita lo mismo. Una descarga tolera demoras; una llamada, no. La <a class="g" href="glosario.html#qos" target="_blank" rel="noopener" title="Glosario: Calidad de servicio (QoS)">calidad de servicio</a> mide y gestiona cuatro magnitudes:</p>
+
+<div class="tabla"><table>
+<thead><tr><th>Métrica</th><th>Qué es</th><th>Cómo se mide</th><th>Referencia</th></tr></thead>
+<tbody>
+<tr><td><a class="g" href="glosario.html#latencia" target="_blank" rel="noopener" title="Glosario: Latencia (retardo)">Latencia</a></td><td>demora de extremo a extremo</td><td>RTT de <code>ping</code></td><td>voz: ≤ 150 ms en un sentido (ITU-T G.114)</td></tr>
+<tr><td><a class="g" href="glosario.html#jitter" target="_blank" rel="noopener" title="Glosario: Jitter (variación del retardo)">Jitter</a></td><td>variación de la demora</td><td><code>mdev</code> de <code>ping</code> (aproximación)</td><td>voz: pocos ms, y lo compensa un búfer</td></tr>
+<tr><td><a class="g" href="glosario.html#perdida-paquetes" target="_blank" rel="noopener" title="Glosario: Pérdida de paquetes">Pérdida</a></td><td>porcentaje de paquetes que no llegan</td><td><code>ping</code>, <code>mtr</code></td><td>voz: ≲ 1 %</td></tr>
+<tr><td><a class="g" href="glosario.html#throughput" target="_blank" rel="noopener" title="Glosario: Throughput (caudal efectivo)">Throughput</a></td><td>tasa efectiva de transferencia</td><td><code>iperf3</code>, pruebas de velocidad</td><td>depende del servicio</td></tr>
+</tbody>
+</table></div>
+
+<p>La latencia de un enlace se descompone en procesamiento, cola, transmisión (L/R) y propagación (d/s). La cola es la que más varía, porque depende de la congestión, y por eso es la principal causa del jitter.</p>
+
+<p><b>Mecanismos:</b> <a class="g" href="glosario.html#priorizacion" target="_blank" rel="noopener" title="Glosario: Priorización de tráfico (DiffServ)">priorizar</a> el tráfico (en IP, marcando el campo DSCP; la voz suele ir en la clase EF), colas con prioridad, limitar la tasa de los flujos que no son críticos y reservar capacidad. La priorización solo tiene efecto cuando hay congestión.</p>
+
+<p><b>Recuperación de fallos:</b> la <a class="g" href="glosario.html#tolerancia-fallos" target="_blank" rel="noopener" title="Glosario: Tolerancia a fallos y recuperación">tolerancia a fallos</a> se logra con redundancia (dos enlaces, dos proveedores, caminos alternativos) y con mecanismos que conmutan solos. Una disponibilidad del 99,9 % equivale a unas 8,8 horas de corte al año; una del 99,99 %, a unos 53 minutos.</p>
+
+<section class="lab" id="lab-11a">
+<header><h3>Laboratorio 5A · Filtrado y calidad en OpenRedLab</h3>
+<div class="chips"><span class="h">OpenRedLab</span><span>60 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li>Abrí <i>Servidor publicado con redirección de puertos</i>. R-Oficina es un <b>router</b>, que filtra sin estado. En su pestaña <b>Filtrado</b>, poné la política por defecto en <i>bloquear</i> y agregá una sola regla que permita TCP 80 hacia el servidor. Pista: el filtro ve el destino ya redirigido. Desde PC-Casa, <b>Conectar</b> al 80. Anotá el diagnóstico (<b>D27</b>) y en qué sentido se corta la conversación: ¿llegó el pedido al servidor?</li>
+<li>Sin tocar las reglas, en <b>Configuración → Modelo</b> de R-Oficina elegí <i>Firewall (wan, lan, dmz)</i>, que filtra con estado. Conectate otra vez al 80 y después al 443. Explicá por qué ahora el 80 funciona sin agregar ninguna regla para la respuesta. Mirá también cómo quedaron los nombres de los puertos.</li>
+<li>En <i>Oficina con DNS propio</i>, agregá en R-Borde una regla que bloquee UDP 53. Hacé ping a <code>google.com</code> y a <code>8.8.8.8</code>: ¿qué deja de funcionar y qué sigue funcionando? Leé el diagnóstico: ¿quién es el que no puede consultar, la PC o el servidor DNS?</li>
+<li>En cualquier red, abrí las propiedades de un cable y poné 40 ms de latencia, 15 ms de jitter y 5 % de pérdida. Mandá 50 pings y anotá mínimo, media, máximo, variación y perdidos. Después poné 100 % de pérdida y anotá el diagnóstico (<b>D32</b>).</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las reglas que cargaste, los resultados de los pasos 1 y 2 explicados, y la tabla de mediciones del paso 4.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-11b">
+<header><h3>Laboratorio 5B · Firewall y TLS en tu servidor</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM) + Wireshark</span><span>2 encuentros</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<ol class="pasos">
+<li><b>Política.</b> Con nginx instalado (módulo 4), aplicá la política de la sección 2: denegar lo entrante, permitir SSH y HTTP. Habilitala y verificá con <code>sudo ufw status verbose</code>.</li>
+<li><b>Prueba desde afuera.</b> Desde tu computadora, probá los puertos 22, 80 y 5000 (con tu servidor de Python corriendo):
+<pre>Test-NetConnection 192.168.56.101 -Port 80
+Test-NetConnection 192.168.56.101 -Port 5000</pre>
+¿Qué diferencia hay entre un puerto bloqueado por el firewall y uno cerrado sin servicio? Activá el registro (<code>sudo ufw logging on</code>) y buscá el intento bloqueado en <code>/var/log/ufw.log</code>.</li>
+<li><b>Lo que ve un sniffer.</b> Creá una página de prueba que pida usuario y clave, y que envíe el formulario por POST (no hace falta que lo procese; nginx responderá un error):
+<pre>echo '&lt;form method="post"&gt;&lt;input name="usuario"&gt;&lt;input name="clave" type="password"&gt;&lt;button&gt;Entrar&lt;/button&gt;&lt;/form&gt;' | sudo tee /var/www/html/login.html</pre>
+Capturá en Wireshark (adaptador <i>Host-Only</i>) mientras enviás el formulario desde <code>http://192.168.56.101/login.html</code>. Filtrá con <code>http.request.method == "POST"</code>. ¿Se ve la clave?</li>
+<li><b>TLS.</b> Generá un certificado autofirmado y activá HTTPS en nginx:
+<pre>sudo openssl req -x509 -newkey rsa:2048 -nodes -days 30 \
+  -keyout /etc/ssl/private/lab.key -out /etc/ssl/certs/lab.crt \
+  -subj "/CN=192.168.56.101" -addext "subjectAltName=IP:192.168.56.101"
+sudo nano /etc/nginx/sites-available/default</pre>
+Dentro del bloque <code>server</code>, agregá:
+<pre>listen 443 ssl;
+ssl_certificate     /etc/ssl/certs/lab.crt;
+ssl_certificate_key /etc/ssl/private/lab.key;</pre>
+<pre>sudo nginx -t &amp;&amp; sudo systemctl reload nginx
+sudo ufw allow 443/tcp</pre></li>
+<li>Repetí la captura del paso 3 con <code>https://</code>. El navegador va a advertir que el certificado no es de confianza: leé el motivo antes de aceptar la excepción, solo para este laboratorio. ¿Qué ves ahora en la captura? Filtrá con <code>tls.handshake</code> e identificá el certificado y la versión de TLS.</li>
+<li>Inspeccioná la conexión desde la terminal:
+<pre>openssl s_client -connect 192.168.56.101:443 -brief &lt; /dev/null
+openssl x509 -in /etc/ssl/certs/lab.crt -noout -subject -issuer -dates</pre>
+¿Por qué el emisor (<i>issuer</i>) es igual al sujeto (<i>subject</i>)?</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la salida de <code>ufw status verbose</code>, la línea del registro del paso 2, dos capturas (HTTP con la clave visible y HTTPS) y la explicación de los pasos 5 y 6.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-11c">
+<header><h3>Laboratorio 5C · Romper y arreglar una consulta SQL</h3>
+<div class="chips"><span class="h">Python 3 (VM o tu computadora)</span><span>45 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Un sistema de ingreso mínimo con SQLite, que viene con Python y no necesita instalación. Guardalo como <code>login.py</code>.</p>
+<pre>import sqlite3
+
+db = sqlite3.connect(":memory:")
+db.execute("CREATE TABLE usuarios (nombre TEXT, clave TEXT)")
+db.execute("INSERT INTO usuarios VALUES ('admin', 'Kq9-xr2!'), ('ana', 'sol-de-mayo-77')")
+
+def ingresar_vulnerable(nombre, clave):
+    sql = f"SELECT nombre FROM usuarios WHERE nombre = '{nombre}' AND clave = '{clave}'"
+    print("  SQL:", sql)
+    return db.execute(sql).fetchone()
+
+def ingresar_seguro(nombre, clave):
+    sql = "SELECT nombre FROM usuarios WHERE nombre = ? AND clave = ?"
+    return db.execute(sql, (nombre, clave)).fetchone()
+
+for nombre, clave in [("ana", "sol-de-mayo-77"), ("ana", "otra"), ("admin' --", "")]:
+    print(f"{nombre!r} / {clave!r}")
+    print("  vulnerable ->", ingresar_vulnerable(nombre, clave))
+    print("  seguro     ->", ingresar_seguro(nombre, clave))</pre>
+<p><b>Aclaración:</b> guardar claves en texto plano es otro error grave. Se hace así solo para que el ejemplo sea corto.</p>
+<ol class="pasos">
+<li>Ejecutalo con <code>python3 login.py</code>. Explicá, mirando la línea <code>SQL:</code>, por qué el tercer intento entra como <code>admin</code> sin saber la clave en la versión vulnerable.</li>
+<li>Buscá otra entrada que logre entrar como el primer usuario de la tabla sin conocer ningún nombre. Pista: <code>' OR '1'='1</code>.</li>
+<li>Explicá por qué la versión segura resiste las mismas entradas, aunque no valide nada.</li>
+<li>Extra: reemplazá el almacenamiento de claves por un hash con sal usando <code>hashlib.scrypt</code>, y adaptá las dos funciones.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> la salida del programa, la entrada del paso 2 y la explicación del paso 3.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-11d">
+<header><h3>Laboratorio 5D · Medir y degradar la calidad en Linux</h3>
+<div class="chips"><span class="h">Ubuntu Server (VM)</span><span>45 minutos</span><span>Individual</span></div></header>
+<div class="lab-cuerpo">
+<p>Retomá los namespaces del laboratorio 3C (pc1, r1 y pc2, con las rutas cargadas). El módulo <a class="g" href="glosario.html#netem" target="_blank" rel="noopener" title="Glosario: tc y netem (emulación de red)"><code>netem</code></a> del núcleo permite simular demora, variación y pérdida en una interfaz.</p>
+<ol class="pasos">
+<li>Medí la línea de base:
+<pre>sudo ip netns exec pc1 ping -c 20 -i 0.2 192.168.20.10 | tail -2</pre>
+Anotá la pérdida y <code>rtt min/avg/max/mdev</code>.</li>
+<li>Degradá el enlace hacia pc2 y volvé a medir:
+<pre>sudo ip netns exec r1 tc qdisc add dev r1-e1 root netem delay 80ms 20ms loss 5%
+sudo ip netns exec pc1 ping -c 50 -i 0.2 192.168.20.10 | tail -2</pre>
+Si aparece <i>Specified qdisc kind is unknown</i>, instalá los módulos extra del núcleo: <code>sudo apt install linux-modules-extra-$(uname -r)</code>.</li>
+<li>¿La latencia media es la que esperabas? ¿Por qué la demora configurada aparece una sola vez y no dos? (Pensá en qué sentido aplica <code>netem</code> sobre <code>r1-e1</code>.)</li>
+<li>Probá cómo afecta a TCP. Creá un archivo de 5 MB y servilo desde pc2, en una segunda terminal:
+<pre>mkdir -p ~/web &amp;&amp; dd if=/dev/urandom of=~/web/archivo bs=1M count=5
+sudo ip netns exec pc2 python3 -m http.server 8080 --directory ~/web</pre>
+Descargalo desde pc1 con la degradación puesta, quitala (paso 5) y volvé a descargarlo. Compará los tiempos:
+<pre>sudo ip netns exec pc1 curl -o /dev/null -w '%{time_total} s\n' http://192.168.20.10:8080/archivo</pre></li>
+<li>Quitá la degradación: <code>sudo ip netns exec r1 tc qdisc del dev r1-e1 root</code>.</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las tres mediciones (base, degradada y descarga con y sin pérdida) y una explicación de por qué un 5 % de pérdida afecta mucho más a TCP de lo que sugiere el número.</div>
+</div>
+</section>
+
+
+
+<section class="lab" id="lab-11e">
+<header><h3>Laboratorio 5E · Diseñar una VPC</h3>
+<div class="chips"><span class="h">Papel + OpenRedLab</span><span>60 minutos</span><span>En parejas</span></div></header>
+<div class="lab-cuerpo">
+<p>No hace falta una cuenta en la nube: el diseño es el mismo que en una red propia. Una aplicación tiene un servidor web, que tiene que ser accesible desde Internet por HTTPS, y una base de datos PostgreSQL, que no. Solo la IP de la oficina (<code>203.0.113.50</code>) puede administrar por SSH. Te asignan la VPC <code>10.20.0.0/16</code> en AWS.</p>
+<ol class="pasos">
+<li>Elegí una subred pública y una privada (/24 cada una) y calculá cuántas direcciones utilizables tiene cada una, sabiendo que AWS reserva 5 por subred.</li>
+<li>Escribí la tabla de rutas de cada subred.</li>
+<li>Escribí los grupos de seguridad del web y de la base de datos en una tabla: sentido, protocolo, puerto y origen.</li>
+<li>La base de datos necesita descargar actualizaciones. ¿Cómo sale a Internet sin quedar expuesta?</li>
+<li>Modelalo en OpenRedLab partiendo de <i>Servidor publicado con redirección de puertos</i>: un firewall (con estado) con NAT, una subred para el web y otra para la base. Cargá objetivos que tienen que cumplirse (desde Internet se llega al web por 443; el web llega a la base por 5432) y uno que tiene que fallar con D27 (desde Internet no se llega a la base).</li>
+</ol>
+<div class="entrega"><span class="lbl">Entregás</span> las tablas de los pasos 1 a 3, la respuesta del paso 4 y el <code>.json</code> de OpenRedLab con los objetivos verificados.</div>
+</div>
+</section>
+
+
+
+<h2 id="desafio">6. Desafío: la política de la PyME</h2>
+
+<p>Esto anticipa el proyecto integrador. Una PyME tiene tres subredes: Administración (192.168.10.0/26), Ventas (192.168.10.64/27) y Servidores (192.168.10.96/28), con un servidor web en 192.168.10.98 y una base de datos en 192.168.10.99. Todo sale a Internet por un firewall con NAT.</p>
+<p>Escribí la política completa en una tabla (orden, origen, destino, protocolo, puerto, acción) para que:</p>
+<ol>
+<li>desde Internet solo se llegue al servidor web, por HTTPS;</li>
+<li>la base de datos solo acepte conexiones del servidor web;</li>
+<li>Ventas no llegue a Administración, pero Administración sí a Ventas;</li>
+<li>solo una PC de TIC, 192.168.10.10, pueda administrar los servidores por SSH;</li>
+<li>todo lo demás quede bloqueado, y quede registrado.</li>
+</ol>
+<p>Indicá si tu política necesita un firewall con estado y por qué. Después cargala en OpenRedLab y demostrala con objetivos que deban funcionar y objetivos que deban fallar con D27.</p>
+
+
+
+<h2 id="logros">7. Micro-logros del módulo</h2>
+<ul class="logros" data-id="u11">
+<li>Clasifico una amenaza según la propiedad que ataca y propongo una defensa.</li>
+<li>Configuro UFW con política de mínimo privilegio y lo verifico desde afuera.</li>
+<li>Explico la diferencia entre filtrado con estado y sin estado con un ejemplo.</li>
+<li>Muestro en una captura una clave en HTTP y la misma conexión cifrada con TLS.</li>
+<li>Explico qué combina TLS de la criptografía simétrica y de la asimétrica.</li>
+<li>Exploto y corrijo una inyección de SQL con consultas parametrizadas.</li>
+<li>Mido latencia, jitter y pérdida, y explico su efecto en TCP y en la voz.</li>
+<li>Traduzco un diseño de subredes y firewall al vocabulario de la nube: VPC, subred pública y privada, grupo de seguridad.</li>
+</ul>
+
+<h2 id="autoevaluacion">8. Autoevaluación</h2>
+<p class="puntaje"></p>
+
+<div class="preg" data-ok="2"><p>Un atacante inunda un servidor con millones de SYN desde direcciones falsas. ¿Qué propiedad ataca?</p>
+<ol><li>Confidencialidad</li><li>Disponibilidad</li><li>Integridad</li><li>No repudio</li></ol>
+<p class="porque">Es una denegación de servicio (inundación de SYN): agota la tabla de conexiones a medio abrir. Se mitiga, entre otras cosas, con SYN cookies.</p></div>
+
+<div class="preg" data-ok="4"><p>Con un firewall con estado y una política «denegar entrante», una PC interna navega por la Web. ¿Por qué entran las respuestas?</p>
+<ol><li>Porque el puerto 80 está abierto</li><li>Porque NAT las deja pasar</li><li>Porque las respuestas no se filtran nunca</li><li>Porque pertenecen a una conexión iniciada desde adentro, que el firewall recuerda</li></ol>
+<p class="porque">Esa es la ventaja del filtrado con estado. Uno sin estado necesitaría reglas explícitas para la vuelta.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Por qué TLS usa cifrado simétrico para los datos?</p>
+<ol><li>Porque es mucho más rápido que el asimétrico; el asimétrico se usa para autenticar y acordar la clave</li><li>Porque el asimétrico es inseguro</li><li>Porque el simétrico no necesita clave</li><li>Porque lo exige HTTP</li></ol>
+<p class="porque">Es un esquema híbrido: cada técnica se usa para lo que hace mejor.</p></div>
+
+<div class="preg" data-ok="3"><p>¿Cuál es la defensa principal contra la inyección de SQL?</p>
+<ol><li>Validar en el navegador con JavaScript</li><li>Usar HTTPS</li><li>Usar consultas parametrizadas</li><li>Ocultar los mensajes de error</li></ol>
+<p class="porque">HTTPS protege el transporte, no la consulta. La validación en el navegador se esquiva. Ocultar errores ayuda, pero no corrige la causa.</p></div>
+
+<div class="preg" data-ok="2"><p>Un sitio tiene el candado de HTTPS. ¿Qué podés afirmar?</p>
+<ol><li>Que el sitio es legítimo</li><li>Que la conexión está cifrada y el certificado corresponde a ese nombre de dominio</li><li>Que el servidor no tiene vulnerabilidades</li><li>Que tus datos se guardan cifrados</li></ol>
+<p class="porque">Un sitio de phishing puede tener un certificado válido para su propio dominio.</p></div>
+
+<div class="preg" data-ok="4"><p>En una videollamada, ¿qué métrica degrada más la experiencia aunque el ancho de banda sobre?</p>
+<ol><li>El throughput</li><li>El tamaño de la MTU</li><li>La cantidad de saltos</li><li>El jitter y la pérdida</li></ol>
+<p class="porque">El tiempo real necesita paquetes a ritmo regular. La variación obliga a usar búferes (más demora) y la pérdida genera cortes; sobrar ancho de banda no lo compensa.</p></div>
+
+<div class="preg" data-ok="1"><p>¿Cómo conviene guardar las contraseñas de los usuarios de una aplicación?</p>
+<ol><li>Con una función lenta con sal (bcrypt, scrypt, Argon2)</li><li>Cifradas con AES</li><li>Con SHA-256 sin sal</li><li>En Base64</li></ol>
+<p class="porque">Cifrar es reversible si se roba la clave. Un hash rápido sin sal cae ante diccionarios y tablas precalculadas. Base64 ni siquiera es un cifrado.</p></div>
+
+<div class="preg" data-ok="2"><p>En una VPC, ¿qué hace que una subred sea pública?</p>
+<ol><li>Que sus máquinas tengan IP de la clase A</li><li>Que su tabla de rutas tenga una ruta por defecto hacia la puerta de enlace de Internet</li><li>Que no tenga grupo de seguridad</li><li>Que use IPv6</li></ol>
+<p class="porque">Lo público o privado de una subred lo define el enrutamiento. Lo que puede entrar lo definen, aparte, los grupos de seguridad.</p></div>
+
+<div class="caja-nota ia"><span class="lbl">Con IA, pero verificando</span><p>Pegale a un asistente la función vulnerable del laboratorio 5C y pedile que la corrija. Comprobá que use parámetros y no «limpie» la cadena a mano (por ejemplo, reemplazando comillas), que es una corrección frágil. Probá la versión propuesta con las entradas del laboratorio y registrá el resultado.</p></div>
+
+<h2 id="profundizar">Para profundizar</h2>
+<ul>
+<li>Kurose y Ross (2017), cap. 8 (seguridad) y cap. 9 (QoS); Tanenbaum, Feamster y Wetherall (2023), cap. 8, reescrito en esa edición.</li>
+<li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Peterson y Davie</a>, cap. 6 (<i>Congestion Control</i>: colas, control de congestión y calidad de servicio) y cap. 8 (<i>Network Security</i>).</li>
+<li><a href="https://hpbn.co/" target="_blank" rel="noopener">Grigorik, <i>High Performance Browser Networking</i></a>, cap. 4 (TLS): cuánto cuesta el establecimiento de TLS y cómo se reduce.</li>
+<li><a href="https://gaia.cs.umass.edu/kurose_ross/wireshark.php" target="_blank" rel="noopener">Wireshark Labs de Kurose y Ross</a>: <i>TLS</i>.</li>
+<li><a href="https://cheatsheetseries.owasp.org/" target="_blank" rel="noopener">OWASP Cheat Sheet Series</a>: las guías de prevención de inyección de SQL y de XSS, y la de almacenamiento de contraseñas.</li>
+</ul>
+<p>Peterson y Davie, Grigorik y los Wireshark Labs están en inglés y son de acceso libre.</p>
+
+
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Módulo 5 de 5</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-u11';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>

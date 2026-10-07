@@ -1,0 +1,397 @@
+<title>Curso de Redes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Concepto: el mismo sistema que el Glosario de Redes. Apunte en una columna de lectura,
+   índice de secciones a la izquierda; los laboratorios se distinguen como hojas de trabajo. */
+:root {
+  --papel: #f4f6f7;
+  --hoja: #ffffff;
+  --tinta: #13222a;
+  --tenue: #56676f;
+  --linea: #d3dce0;
+  --acento: #1d5fa8;
+  --acento-suave: #e3ecf6;
+  --aviso: #9a5300;
+  --aviso-suave: #fbf0e2;
+  --bien: #1f7a3d;
+  --bien-suave: #e2f3e7;
+  --mal: #b3261e;
+  --mal-suave: #fbe6e4;
+  --docente: #6b3fa0;
+  --docente-suave: #f1eaf9;
+  --f-titulo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "Atkinson Hyperlegible Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --t-xs: .78rem; --t-s: .875rem; --t-m: 1rem; --t-l: 1.3rem; --t-xl: 1.75rem; --t-xxl: clamp(2.2rem, 5vw, 3.4rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+    --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+    --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+    --docente: #c6a2f0; --docente-suave: #2a1d3b;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel: #0e161a; --hoja: #142027; --tinta: #e1e9ec; --tenue: #93a6ae; --linea: #263840;
+  --acento: #7db4ee; --acento-suave: #18304a; --aviso: #eaa95a; --aviso-suave: #33240f;
+  --bien: #6fcf8f; --bien-suave: #14301d; --mal: #f08a80; --mal-suave: #3a1714;
+  --docente: #c6a2f0; --docente-suave: #2a1d3b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1.5rem; }
+body { background: var(--papel); color: var(--tinta); font: 400 var(--t-m)/1.65 var(--f-texto); padding-inline: clamp(16px, 4vw, 48px); }
+a { color: var(--acento); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible, li[tabindex]:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 3px; }
+code, pre, kbd { font-family: var(--f-mono); font-size: .9em; }
+code { background: var(--acento-suave); padding: .05em .3em; border-radius: 3px; overflow-wrap: anywhere; }
+kbd { border: 1px solid var(--linea); border-bottom-width: 2px; border-radius: 3px; padding: 0 .3em; background: var(--hoja); }
+pre { background: var(--hoja); border: 1px solid var(--linea); padding: .8rem 1rem; overflow-x: auto; line-height: 1.45; border-radius: 4px; margin: .8rem 0; }
+pre code { background: none; padding: 0; }
+pre .c { color: var(--tenue); }
+a.g { color: inherit; text-decoration: underline dotted var(--acento); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+a.g:hover { color: var(--acento); }
+
+.marco { max-width: 76rem; margin-inline: auto; }
+
+/* Encabezado */
+header.tapa { padding-block: 2rem 1.5rem; display: grid; gap: 1rem; border-bottom: 2px solid var(--tinta); }
+.migas { display: flex; gap: .4rem 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+.cejilla { font: 600 var(--t-xs)/1.4 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0; }
+h1 { font: 800 var(--t-xxl)/1 var(--f-titulo); font-stretch: 72%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.bajada { max-width: 64ch; margin: 0; color: var(--tenue); font-size: 1.06rem; }
+.tapa-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: end; }
+.objetivos { margin: 0; padding-left: 1.2rem; display: grid; gap: .2rem; max-width: 70ch; }
+.objetivos-tit { font: 700 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: .4rem 0 .2rem; }
+.pila { display: grid; gap: 2px; width: 7.5rem; }
+.pila span { display: flex; justify-content: space-between; font: 400 .68rem/1 var(--f-mono); color: var(--tenue); padding: .28rem .45rem; border: 1px solid var(--linea); border-radius: 2px; }
+.pila span.on { background: var(--acento); border-color: var(--acento); color: var(--hoja); font-weight: 600; }
+.pila small { font: 600 .6rem/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); text-align: center; }
+
+/* Cuerpo */
+.cuerpo { display: grid; grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; padding-block: 2rem 4rem; }
+nav.indice { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1rem); align-self: start; max-height: calc(100vh - 2rem); overflow: auto; font-size: var(--t-s); }
+nav.indice h2 { font: 600 var(--t-xs)/1 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); margin: 0 0 .7rem; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+nav.indice a { color: var(--tinta); text-decoration: none; line-height: 1.3; display: block; }
+nav.indice a:hover { color: var(--acento); }
+nav.indice li.lab a { color: var(--acento); font-weight: 600; }
+
+main.texto { max-width: 74ch; min-width: 0; }
+main.texto > h2 { font: 800 var(--t-xl)/1.1 var(--f-titulo); font-stretch: 80%; margin: 3rem 0 .8rem; padding-top: .8rem; border-top: 1px solid var(--linea); text-wrap: balance; }
+main.texto > h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
+main.texto h3 { font: 700 var(--t-l)/1.2 var(--f-titulo); font-stretch: 88%; margin: 2rem 0 .5rem; text-wrap: balance; }
+main.texto h4 { font: 700 var(--t-m)/1.3 var(--f-texto); margin: 1.4rem 0 .3rem; }
+main.texto p, main.texto li { text-wrap: pretty; }
+main.texto ul, main.texto ol { padding-left: 1.3rem; }
+main.texto li + li { margin-top: .25rem; }
+.tabla { overflow-x: auto; margin: .8rem 0; }
+table { border-collapse: collapse; font-size: var(--t-s); font-variant-numeric: tabular-nums; min-width: 100%; }
+th, td { text-align: left; padding: .4rem .65rem; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 700; color: var(--tenue); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .05em; }
+figure { margin: 1.2rem 0; }
+figure svg { width: 100%; height: auto; display: block; max-width: 100%; }
+figcaption { font-size: var(--t-s); color: var(--tenue); margin-top: .4rem; }
+svg text { fill: var(--tinta); font-family: var(--f-mono); }
+svg .tenue { fill: var(--tenue); }
+svg .caja { fill: var(--hoja); stroke: var(--linea); }
+svg .acento { fill: var(--acento-suave); stroke: var(--acento); }
+svg .aviso { fill: var(--aviso-suave); stroke: var(--aviso); }
+svg .bien { fill: var(--bien-suave); stroke: var(--bien); }
+svg .linea { stroke: var(--tenue); fill: none; }
+
+/* Recuadros */
+.caja-nota { border-radius: 6px; padding: .8rem 1rem; margin: 1.2rem 0; font-size: .96rem; }
+.caja-nota > :first-child { margin-top: 0; }
+.caja-nota > :last-child { margin-bottom: 0; }
+.caja-nota .lbl { display: block; font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+.pensar { background: var(--acento-suave); }
+.pensar .lbl { color: var(--acento); }
+.ojo { background: var(--aviso-suave); }
+.ojo .lbl { color: var(--aviso); }
+.ia { background: var(--hoja); border: 1px dashed var(--linea); }
+.ia .lbl { color: var(--tenue); }
+.ejemplo { background: var(--hoja); border: 1px solid var(--linea); }
+.ejemplo .lbl { color: var(--tenue); }
+
+/* Laboratorios */
+section.lab { background: var(--hoja); border: 1px solid var(--linea); border-radius: 8px; margin: 2rem 0; overflow: hidden; }
+section.lab > header { padding: .9rem 1.1rem .8rem; border-bottom: 1px solid var(--linea); display: grid; gap: .45rem; }
+section.lab > header h3 { margin: 0; }
+.chips { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chips span { font: 600 var(--t-xs)/1 var(--f-texto); border: 1px solid var(--linea); border-radius: 999px; padding: .3rem .6rem; color: var(--tenue); }
+.chips span.h { color: var(--acento); border-color: var(--acento); }
+section.lab > .lab-cuerpo { padding: .4rem 1.1rem 1.1rem; }
+section.lab ol.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+section.lab ol.pasos > li { counter-increment: paso; position: relative; padding-left: 2.2rem; margin-top: .8rem; }
+section.lab ol.pasos > li::before { content: counter(paso); position: absolute; left: 0; top: .05rem; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--tinta); color: var(--papel); font: 700 .75rem/1.5rem var(--f-texto); text-align: center; }
+.entrega { border-top: 1px dashed var(--linea); margin-top: 1rem; padding-top: .7rem; font-size: .95rem; }
+.entrega .lbl { font: 700 var(--t-xs)/1.2 var(--f-texto); text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+
+/* Micro-logros */
+ul.logros { list-style: none; padding-left: 0; display: grid; gap: .45rem; }
+ul.logros li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .6rem; align-items: start; margin: 0; }
+ul.logros input { width: 1.15rem; height: 1.15rem; margin-top: .25rem; accent-color: var(--bien); }
+ul.logros label { cursor: pointer; }
+.logros-cuenta { font: 400 var(--t-s)/1 var(--f-mono); color: var(--tenue); }
+
+/* Autoevaluación */
+.preg { border-top: 1px solid var(--linea); padding-block: 1rem; }
+.preg > p:first-child { font-weight: 600; margin-top: 0; }
+.preg ol { list-style: upper-alpha; padding-left: 1.6rem; display: grid; gap: .3rem; }
+.preg ol li { cursor: pointer; padding: .3rem .5rem; border-radius: 4px; border: 1px solid transparent; margin: 0; }
+.preg ol li:hover { border-color: var(--linea); }
+.preg ol li.ok { background: var(--bien-suave); border-color: var(--bien); }
+.preg ol li.no { background: var(--mal-suave); border-color: var(--mal); }
+.preg .porque { font-size: .95rem; background: var(--papel); padding: .6rem .8rem; border-radius: 4px; }
+.puntaje { font: 600 var(--t-s)/1.4 var(--f-texto); color: var(--tenue); }
+
+/* Docente */
+
+footer.pie { border-top: 2px solid var(--tinta); padding-block: 1.5rem 3rem; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: var(--t-s); }
+
+@media (max-width: 900px) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border: 1px solid var(--linea); border-radius: 6px; padding: .8rem 1rem; background: var(--hoja); }
+  nav.indice ol { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+}
+@media (max-width: 560px) {
+  .tapa-grid { grid-template-columns: minmax(0, 1fr); }
+  .pila { grid-auto-flow: column; width: auto; justify-content: start; }
+  .pila small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+@media print { nav.indice { display: none; } .cuerpo { display: block; } section.lab { break-inside: avoid; } }
+</style>
+
+<div class="marco">
+
+<header class="tapa">
+  <nav class="migas" aria-label="Navegación del curso"><a href="glosario.html" target="_blank" rel="noopener">Glosario</a><a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">OpenRedLab</a></nav>
+  <div class="tapa-grid">
+    <div style="display:grid;gap:.8rem">
+      <p class="cejilla">Cinco módulos · Dieciséis semanas</p>
+      <h1>Curso de Redes</h1>
+      <p class="bajada">De los cables a la seguridad, en cinco módulos. Cada una tiene teoría con ejemplos resueltos, laboratorios en OpenRedLab y en Linux, un desafío sin guía, micro-logros y autoevaluación. El cuatrimestre cierra con un parcial y con el proyecto integrador «La PyME Virtual».</p>
+    </div>
+    <div class="pila" aria-label="Capas OSI que trabaja el módulo"><small>Capas OSI</small><span class="on" title="Capa 7: Aplicación">7 <em style="font-style:normal">Aplicación</em></span><span class="" title="Capa 6: Presentación">6 <em style="font-style:normal">Presentación</em></span><span class="" title="Capa 5: Sesión">5 <em style="font-style:normal">Sesión</em></span><span class="on" title="Capa 4: Transporte">4 <em style="font-style:normal">Transporte</em></span><span class="on" title="Capa 3: Red">3 <em style="font-style:normal">Red</em></span><span class="on" title="Capa 2: Enlace">2 <em style="font-style:normal">Enlace</em></span><span class="on" title="Capa 1: Física">1 <em style="font-style:normal">Física</em></span></div>
+  </div>
+  
+</header>
+
+<div class="cuerpo">
+  <nav class="indice" aria-label="Secciones de la página"><h2>En esta página</h2><ol><li><a href="#unidades">Módulos</a></li><li><a href="#cronograma">Cronograma</a></li><li><a href="#evaluacion">Evaluación</a></li><li><a href="#entorno">Preparar el entorno</a></li><li><a href="#ia">Uso de inteligencia artificial</a></li><li><a href="#proyecto">Proyecto integrador: La PyME Virtual</a></li><li><a href="#bibliografia">Bibliografía</a></li></ol></nav>
+  <main class="texto">
+<h2 id="unidades">Módulos</h2>
+
+<div class="tabla"><table>
+<thead><tr><th>Módulo</th><th>Semanas</th><th>De qué se trata</th></tr></thead>
+<tbody>
+<tr><td><a href="modulo-1.html">1 · Fundamentos y capa física</a></td><td>1–2</td><td>Qué es una red, alcance y topologías, medios de transmisión, dispositivos, dominios de colisión y de broadcast.</td></tr>
+<tr><td><a href="modulo-2.html">2 · Modelos OSI y TCP/IP</a></td><td>3–4</td><td>Capas, encapsulamiento, el viaje de un paquete, dónde vive cada protocolo dentro del sistema operativo y cómo diagnosticar una falla.</td></tr>
+<tr><td><a href="modulo-3.html">3 · Direccionamiento y enrutamiento</a></td><td>5–8</td><td>IPv4, máscaras, subnetting y VLSM; NAT, también en Docker; rutas estáticas; DHCP, DNS y cómo se conectan los proveedores.</td></tr>
+<tr><td><a href="modulo-4.html">4 · Transporte y aplicación</a></td><td>9–10</td><td>Puertos y sockets, TCP y UDP, HTTP, APIs REST y CORS, la red desde el código y el análisis con Wireshark.</td></tr>
+<tr><td><a href="modulo-5.html">5 · Seguridad y QoS</a></td><td>11–12</td><td>Amenazas, firewalls (también en la nube), criptografía y TLS, inyección de SQL y XSS, latencia, jitter y pérdida.</td></tr>
+</tbody>
+</table></div>
+
+<p>Los términos subrayados con puntos en cada módulo llevan al <a href="glosario.html" target="_blank" rel="noopener">Glosario de Redes</a>, donde está la definición con sus fuentes.</p>
+
+<h2 id="cronograma">Cronograma</h2>
+
+<div class="tabla"><table>
+<thead><tr><th>Semana</th><th>Tema</th><th>Prácticas</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Red, alcance, topologías, medios</td><td>Lab 1A</td></tr>
+<tr><td>2</td><td>Dispositivos y dominios</td><td>Lab 1A, Lab 1B, desafío del cableado</td></tr>
+<tr><td>3</td><td>Capas, OSI, TCP/IP, encapsulamiento</td><td>Lab 2A</td></tr>
+<tr><td>4</td><td>El viaje del paquete; la pila en el SO; método de diagnóstico</td><td>Lab 2B, práctica 2C, desafío de la trama</td></tr>
+<tr><td>5</td><td>IPv4, binario, máscara, CIDR</td><td>Ejercitación; cálculo en OpenRedLab</td></tr>
+<tr><td>6</td><td>Subnetting y VLSM</td><td>Desafío VLSM del Complejo Termal</td></tr>
+<tr><td>7</td><td>NAT, Docker y enrutamiento</td><td>Labs 1 a 3 de OpenRedLab, Lab 3C, Lab 3E</td></tr>
+<tr><td>8</td><td>DHCP, DNS, ISP</td><td>Lab 3B, Lab 3D</td></tr>
+<tr><td>9</td><td>Puertos, sockets, TCP y UDP</td><td>Lab 4A, Lab 4B</td></tr>
+<tr><td>10</td><td>HTTP, APIs, CORS y Wireshark</td><td>Lab 4B, Lab 4C, desafío «la API no responde»</td></tr>
+<tr><td>11</td><td>Amenazas, firewalls, TLS</td><td>Lab 5A, Lab 5B</td></tr>
+<tr><td>12</td><td>Codificación segura, nube y QoS</td><td>Lab 5C, Lab 5D, Lab 5E, desafío de la política</td></tr>
+<tr><td>13</td><td colspan="2"><b>Parcial práctico individual</b>, sin asistencia de IA</td></tr>
+<tr><td>14–16</td><td colspan="2"><b>Proyecto integrador «La PyME Virtual»</b>, en grupos de 2 o 3, con defensa oral</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="evaluacion">Evaluación</h2>
+<ul>
+<li><b>Seguimiento semanal:</b> los micro-logros de cada módulo y las entregas de los laboratorios. No llevan nota numérica, pero son condición para presentarse al parcial y al proyecto.</li>
+<li><b>Parcial práctico individual (semana 13):</b> diagnóstico y resolución de problemas de red (IP, DNS, firewall, puertos) con herramientas de línea de comandos y Wireshark. Sin asistencia de IA.</li>
+<li><b>Proyecto integrador (semanas 14 a 16):</b> diseño e implementación de la red de una PyME, con defensa oral y demostración en vivo.</li>
+<li><b>Condiciones:</b> la materia se promociona con nota final de 7 o más. Para regularizar hay que aprobar las instancias parciales con 6 y tener el 70 % de asistencia (60 % si trabajás o tenés una situación particular justificada). No se aceptan alumnos libres, por la carga de prácticas.</li>
+</ul>
+
+<h2 id="entorno">Preparar el entorno</h2>
+
+<p>Hacé esto en la primera semana. Si algo falla, avisá en clase.</p>
+
+<h3>OpenRedLab</h3>
+<p>Se usa en el navegador: <a href="https://fhleonardi.github.io/openredlab/" target="_blank" rel="noopener">fhleonardi.github.io/openredlab</a>. No necesita instalación ni conexión: también podés descargar el <code>index.html</code> y abrirlo con doble clic. Tu trabajo queda guardado en el navegador.</p>
+
+<h3>La máquina virtual</h3>
+<ol>
+<li>Instalá <b>VirtualBox</b> (última versión estable) y creá una VM con <b>Ubuntu Server LTS</b>, con 2 GB de RAM y 20 GB de disco. Si ya tenés una VM con Ubuntu, podés reutilizarla.</li>
+<li>En <b>Configuración → Red</b>, dejá el <b>Adaptador 1</b> en <i>NAT</i> (salida a Internet) y habilitá el <b>Adaptador 2</b> como <i>Adaptador solo anfitrión</i>. Así tu computadora llega a la VM por la red 192.168.56.0/24.</li>
+<li>Dentro de la VM, asegurate de que las dos interfaces tomen dirección por DHCP. Editá el archivo de <code>/etc/netplan/</code> (el nombre varía) para que quede así, y aplicalo con <code>sudo netplan apply</code>:
+<pre>network:
+  version: 2
+  ethernets:
+    enp0s3:
+      dhcp4: true
+    enp0s8:
+      dhcp4: true</pre></li>
+<li>Instalá las herramientas del curso:
+<pre>sudo apt update
+sudo apt install -y iproute2 tcpdump bind9-dnsutils traceroute netcat-openbsd curl ethtool nftables ufw openssh-server</pre></li>
+<li>Anotá la IP del adaptador solo anfitrión (<code>ip -br addr show enp0s8</code>, suele ser 192.168.56.101) y probá desde tu computadora: <code>ssh usuario@192.168.56.101</code>.</li>
+</ol>
+
+<h3>En tu computadora</h3>
+<ul>
+<li><b>Wireshark</b> (wireshark.org), con Npcap en Windows. Lo vas a usar sobre el adaptador <i>VirtualBox Host-Only</i> y para abrir las capturas que hagas en la VM.</li>
+<li>Un cliente SSH (Windows 10 y 11 ya traen <code>ssh</code> y <code>scp</code> en PowerShell).</li>
+</ul>
+
+
+
+<h2 id="ia">Uso de inteligencia artificial</h2>
+
+<p>Podés usar asistentes de IA (ChatGPT, Claude u otros) para aprender, con dos condiciones: <b>verificar</b> lo que te dicen y <b>documentarlo</b>. Las respuestas de un asistente no son una fuente: son un punto de partida que hay que comprobar en el simulador, en la terminal o en la bibliografía. Cada módulo propone una actividad «Con IA, pero verificando».</p>
+
+<p>Llevá un <b>registro de uso de IA</b> (un documento o una planilla) con una fila por consulta relevante:</p>
+<div class="tabla"><table>
+<thead><tr><th>Fecha</th><th>Herramienta</th><th>Qué pregunté</th><th>Qué respondió (resumen)</th><th>Cómo lo verifiqué</th><th>¿Era correcto? ¿Qué corregí?</th></tr></thead>
+<tbody>
+<tr><td>12/08</td><td>—</td><td>Diseño VLSM del ejercicio 5</td><td>Propuso /25, /26, /27, /28 y dos /30</td><td>Verificar diseño, en OpenRedLab</td><td>El /28 estaba desalineado (empezaba en .216); lo moví a .224</td></tr>
+</tbody>
+</table></div>
+<p>El registro forma parte de la evaluación formativa. El parcial es sin IA: lo que no entendiste usando el asistente se nota ahí.</p>
+
+<h2 id="proyecto">Proyecto integrador: La PyME Virtual</h2>
+
+<p>En grupos de 2 o 3 personas, van a diseñar e implementar la red de una pequeña empresa. Cada grupo recibe un enunciado con su empresa, sus áreas y la cantidad de puestos, y un bloque de direcciones.</p>
+
+<h3>Requisitos mínimos</h3>
+<ul>
+<li>Al menos <b>dos subredes</b> de usuarios, diseñadas con VLSM, más una para servidores.</li>
+<li>Un <b>servidor web</b> (nginx) con HTTPS, accesible desde «Internet» solo por el puerto 443.</li>
+<li>Un <b>firewall</b> con política de mínimo privilegio, NAT de salida y redirección de puertos hacia el servidor web.</li>
+<li>Resolución de nombres para los servicios internos.</li>
+<li><b>Documentación técnica</b> suficiente para que otra persona entienda, mantenga y diagnostique la red.</li>
+</ul>
+
+<h3>Entregas</h3>
+<div class="tabla"><table>
+<thead><tr><th>Semana</th><th>Entrega</th></tr></thead>
+<tbody>
+<tr><td>14</td><td><b>Diseño:</b> topología, tabla VLSM, plan de direccionamiento (equipos, IP, puerta de enlace), política de firewall en tabla y servicios. Más el modelo en OpenRedLab con objetivos que deben funcionar y objetivos que deben fallar (exportado en <code>.json</code>).</td></tr>
+<tr><td>15</td><td><b>Implementación en Linux:</b> la red funcionando en la VM (con namespaces, como en el Lab 3C, o con varias VM), con el router-firewall en <code>nftables</code> o UFW y el servidor web con HTTPS. Capturas que demuestren cada requisito.</td></tr>
+<tr><td>16</td><td><b>Defensa oral</b> con demostración en vivo: cada integrante explica una parte y responde preguntas sobre todo el proyecto. Se entrega la documentación final y el registro de uso de IA del grupo.</td></tr>
+</tbody>
+</table></div>
+
+
+
+<h2 id="bibliografia">Bibliografía</h2>
+<h3>Básica</h3>
+<ul>
+<li>Tanenbaum, A. S., Feamster, N. y Wetherall, D. J. (2023). <i>Redes de computadoras</i> (6.ª ed.). Pearson. Original en inglés: <i>Computer Networks</i>, 6th ed., 2021.</li>
+<li>Kurose, J. F. y Ross, K. W. (2017). <i>Redes de computadoras: un enfoque descendente</i> (7.ª ed.). Pearson. Es la última edición en español; en inglés va por la 9th ed. (2025).</li>
+<li>Stallings, W. (2004). <i>Comunicaciones y redes de computadores</i> (7.ª ed.). Pearson Prentice Hall.</li>
+</ul>
+<h3>Complementaria, de acceso libre</h3>
+<ul>
+<li>Peterson, L. L. y Davie, B. S. (2021). <i>Computer Networks: A Systems Approach</i> (6th ed.). Morgan Kaufmann. <a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">book.systemsapproach.org</a></li>
+<li>Grigorik, I. (2013). <i>High Performance Browser Networking</i>. O’Reilly. <a href="https://hpbn.co/" target="_blank" rel="noopener">hpbn.co</a></li>
+<li>Kurose, J. F. y Ross, K. W. <i>Wireshark Labs</i>. <a href="https://gaia.cs.umass.edu/kurose_ross/wireshark.php" target="_blank" rel="noopener">gaia.cs.umass.edu/kurose_ross/wireshark.php</a></li>
+<li>Cisco Networking Academy. <i>CCNA: Introducción a las redes</i>. <a href="https://www.netacad.com/courses/ccna-introduction-networks?courseLang=es-XL" target="_blank" rel="noopener">netacad.com</a></li>
+</ul>
+<h3>Normas y documentación</h3>
+<ul>
+<li>Normas citadas en el glosario: RFC del IETF (<a href="https://www.rfc-editor.org/" target="_blank" rel="noopener">rfc-editor.org</a>), IEEE 802, ANSI/TIA-568, ISO/IEC 11801, NIST.</li>
+<li>Documentación: <a href="https://www.wireshark.org/docs/" target="_blank" rel="noopener">Wireshark</a>, <a href="https://nginx.org/en/docs/" target="_blank" rel="noopener">nginx</a>, <a href="https://help.ubuntu.com/community/UFW" target="_blank" rel="noopener">UFW</a>, <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top Ten</a>.</li>
+</ul>
+
+  </main>
+</div>
+
+<footer class="pie">
+  <span>Francisco Leonardi · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es">CC BY-NC-SA 4.0</a></span>
+  <span>Curso abierto de redes de computadoras</span>
+</footer>
+</div>
+
+<script>
+(function () {
+  const CLAVE = 'curso-redes-portada';
+  let guardado = {};
+  try { guardado = JSON.parse(localStorage.getItem(CLAVE) || '{}'); } catch (e) { guardado = {}; }
+  const guardar = () => { try { localStorage.setItem(CLAVE, JSON.stringify(guardado)); } catch (e) {} };
+
+  // Micro-logros: casillas que recuerda el navegador
+  for (const ul of document.querySelectorAll('ul.logros')) {
+    const cuenta = document.createElement('p');
+    cuenta.className = 'logros-cuenta';
+    const items = [...ul.querySelectorAll('li')];
+    const actualizar = () => {
+      const n = items.filter((li) => li.querySelector('input').checked).length;
+      cuenta.textContent = n + ' de ' + items.length + ' logrados';
+    };
+    items.forEach((li, i) => {
+      const id = 'logro-' + (ul.dataset.id || 'x') + '-' + i;
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.id = id;
+      input.checked = !!guardado[id];
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.innerHTML = li.innerHTML;
+      li.textContent = '';
+      li.append(input, label);
+      input.addEventListener('change', () => { guardado[id] = input.checked; guardar(); actualizar(); });
+    });
+    ul.after(cuenta);
+    actualizar();
+  }
+
+  // Autoevaluación
+  const pregs = [...document.querySelectorAll('.preg')];
+  const puntaje = document.querySelector('.puntaje');
+  let correctas = 0, respondidas = 0;
+  const marcar = () => { if (puntaje) puntaje.textContent = respondidas ? (correctas + ' correctas de ' + respondidas + ' respondidas, sobre ' + pregs.length + ' preguntas.') : (pregs.length + ' preguntas. Elegí una opción en cada una para ver la explicación.'); };
+  for (const p of pregs) {
+    const ok = +p.dataset.ok;
+    const ops = [...p.querySelectorAll('ol > li')];
+    const porque = p.querySelector('.porque');
+    if (porque) porque.hidden = true;
+    ops.forEach((li, i) => {
+      li.tabIndex = 0;
+      li.setAttribute('role', 'button');
+      const elegir = () => {
+        if (p.dataset.listo) return;
+        p.dataset.listo = '1';
+        respondidas++;
+        if (i + 1 === ok) correctas++;
+        li.classList.add(i + 1 === ok ? 'ok' : 'no');
+        ops[ok - 1].classList.add('ok');
+        if (porque) porque.hidden = false;
+        marcar();
+      };
+      li.addEventListener('click', elegir);
+      li.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); elegir(); } });
+    });
+  }
+  marcar();
+})();
+</script>
